@@ -1,5 +1,5 @@
 import { parse } from "@babel/parser";
-import { default as generate } from "@babel/generator";
+import { default as generate_ } from "@babel/generator";
 import { readFileSync, readdirSync } from "fs";
 import * as url from 'url';
 import converter from "./converter.js";
@@ -36,6 +36,7 @@ if (supported(targetDiscordMod)) {
                 body: out
             },
         } as File;
+        const generate = typeof generate_ == "function" ? generate_ : (generate_ as { default: typeof generate_ }).default;
         console.log(generate(outMod));
     });
 }
