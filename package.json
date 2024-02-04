@@ -3,12 +3,24 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
+  "bin": {
+    "discord-mod-compiler": "dist/cli.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "cli": "node dist/cli.js",
+    "cli-debug": "node --inspect dist/cli.js",
     "build": "tsc"
   },
   "keywords": [],
   "license": "GPL-3.0",
+  "type": "module",
   "devDependencies": {
+    "@babel/generator": "^7.23.6",
+    "@babel/parser": "^7.23.9",
+    "@babel/types": "^7.23.9",
+    "@types/babel__generator": "^7.6.8",
+    "@types/node": "^20.11.16",
+    "typescript": "^5.3.3"
   }
 }
