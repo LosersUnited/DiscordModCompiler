@@ -1,7 +1,9 @@
 import { parse } from "@babel/parser";
-import generate from "@babel/generator";
+import { default as generate } from "@babel/generator";
 import { readFileSync, readdirSync } from "fs";
 import * as url from 'url';
+import converter from "./converter.js";
+import { File } from "@babel/types";
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 // if (process.argv.includes("--cli")) {
@@ -24,8 +26,17 @@ if (supported(targetDiscordMod)) {
     filler.then((x: any) => {
         // const test = x.WebpackApi.getModule; // this has to be this way, kinda universal
         // console.log(test);
-        ast.program.body
+        // ast.program.body
         debugger;
+        const out = converter(ast);
+        const outMod = {
+            ...ast,
+            program: {
+                ...ast.program,
+                body: out
+            },
+        } as File;
+        console.log(generate(outMod));
     });
 }
 // }
