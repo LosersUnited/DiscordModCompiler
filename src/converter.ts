@@ -1,10 +1,6 @@
 import { ParseResult } from "@babel/parser";
 import { File, ImportDeclaration, ImportSpecifier, Statement } from "@babel/types";
-import { readFileSync } from "fs";
-
-import * as url from 'url';
-const __filename = url.fileURLToPath(import.meta.url);
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+import { myPackageName } from "./utils.js";
 
 function removeASTLocation(ast: Statement[] | Statement) {
     if (Array.isArray(ast)) {
@@ -24,15 +20,23 @@ export default function (ast: ParseResult<File>): Statement[] {
     const importsToBake = [];
     console.log(importStatements);
     removeASTLocation(importStatements);
+    const importsToRemove: number[] = [];
     for (let index = 0; index < importStatements.length; index++) {
         const element = importStatements[index] as ImportDeclaration;
-        const spec = element.specifiers[0] as ImportSpecifier;
         // spec.local.name = "test_"; // alias
         // // @ts-ignore
         // spec.imported.name = "test"; // imported value
         // debugger;
-        if (element.source.value == JSON.parse(readFileSync(__dirname + "../package.json", "utf8")).name)
-            importsToBake.push(spec.local.name);
+        if (element.source.value == myPackageName) // checking if it's the same module as we are
+        {
+            const spec = element.specifiers[0] as ImportSpecifier;
+            importsToBake.push(spec.local.name); // we'll later watch those for replacement
+            importsToRemove.push(index);
+        }
     }
-    return parsedBody;
+    const trueImportsToRemove =
+        importStatements.filter((_, index) => importsToRemove.includes(index));
+    const parsedBodyWithoutOurImports = parsedBody.filter((item, index) => !trueImportsToRemove.includes(parsedBody[index]));
+    console.log(parsedBodyWithoutOurImports);
+    return parsedBodyWithoutOurImports;
 }
