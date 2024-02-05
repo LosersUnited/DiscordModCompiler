@@ -18,7 +18,6 @@ export default function (ast: ParseResult<File>): Statement[] {
     const parsedBody = ast.program.body;
     const importStatements = parsedBody.filter(x => x.type == "ImportDeclaration");
     const importsToBake = [];
-    console.log(importStatements);
     removeASTLocation(importStatements);
     const importsToRemove: number[] = [];
     for (let index = 0; index < importStatements.length; index++) {
@@ -39,6 +38,13 @@ export default function (ast: ParseResult<File>): Statement[] {
     const trueImportsToRemove =
         importStatements.filter((_, index) => importsToRemove.includes(index));
     const parsedBodyWithoutOurImports = parsedBody.filter((item, index) => !trueImportsToRemove.includes(parsedBody[index]));
-    console.log(parsedBodyWithoutOurImports);
+    for (let index = 0; index < parsedBodyWithoutOurImports.length; index++) {
+        const element = parsedBodyWithoutOurImports[index];
+        /* TODO: traverse all elements and look for their signature, based on elements of `importsToBake`. If found, replace their object path and property name with the one that gets resolved from the current one
+         * Example:
+         * WebpackApi.getModule(something) -> "WebpackApi" matches signature of an element from importsToBake array -> import WebpackApi ourselves -> find method getModule -> select replacement based on target client mod -> read target's object path and property name -> replace them
+         */
+        debugger;
+    }
     return parsedBodyWithoutOurImports;
 }
