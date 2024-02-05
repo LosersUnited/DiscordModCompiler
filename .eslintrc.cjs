@@ -116,5 +116,6 @@ module.exports = {
 		"spaced-comment": "error",
 		"yoda": "error",
 		"@typescript-eslint/no-explicit-any": "off",
+		"no-debugger": "off",
 	},
 };

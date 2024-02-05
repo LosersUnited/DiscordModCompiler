@@ -6,7 +6,6 @@ import converter from "./converter.js";
 import { File } from "@babel/types";
 import { myPackageName } from "./utils.js";
 if (process.argv.length == 4) {
-    const __filename = url.fileURLToPath(import.meta.url);
     const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
     const supportedClientMods = [...readdirSync(`${__dirname}/converters`), "all"];
     const code = readFileSync(process.argv[2], "utf8");
@@ -16,13 +15,14 @@ if (process.argv.length == 4) {
     const supported = (sample: string) => supportedClientMods.indexOf(sample) != -1;
     if (supported(targetDiscordMod)) {
         const filler = import(url.pathToFileURL(`${__dirname}/converters/${targetDiscordMod}`).href);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         filler.then((x: any) => {
             const out = converter(ast);
             const outMod = {
                 ...ast,
                 program: {
                     ...ast.program,
-                    body: out
+                    body: out,
                 },
             } as File;
             const generate = typeof generate_ == "function" ? generate_ : (generate_ as { default: typeof generate_ }).default;
