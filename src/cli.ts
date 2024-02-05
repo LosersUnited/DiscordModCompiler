@@ -15,7 +15,7 @@ if (process.argv.length == 4) {
     const targetDiscordMod = process.argv[3] + ".js";
     const supported = (sample: string) => supportedClientMods.indexOf(sample) != -1;
     if (supported(targetDiscordMod)) {
-        const filler = import(`${__dirname}/converters/${targetDiscordMod}`);
+        const filler = import(url.pathToFileURL(`${__dirname}/converters/${targetDiscordMod}`).href);
         filler.then((x: any) => {
             const out = converter(ast);
             const outMod = {
