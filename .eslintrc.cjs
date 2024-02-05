@@ -5,10 +5,12 @@ module.exports = {
 		"commonjs": true,
 		"es6": true,
 	},
-	"extends": "eslint:recommended",
-	"sourceType": "module",
+	"extends": ["eslint:recommended", 'plugin:@typescript-eslint/recommended'],
+	parser: '@typescript-eslint/parser',
+	plugins: ['@typescript-eslint'],
 	"parserOptions": {
 		"ecmaVersion": 2021,
+		"sourceType": "module",
 	},
 	"rules": {
 		"arrow-spacing": [
@@ -113,5 +115,6 @@ module.exports = {
 		"space-unary-ops": "error",
 		"spaced-comment": "error",
 		"yoda": "error",
+		"@typescript-eslint/no-explicit-any": "off",
 	},
 };
