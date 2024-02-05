@@ -29,9 +29,11 @@ export default function (ast: ParseResult<File>): Statement[] {
         // debugger;
         if (element.source.value == myPackageName) // checking if it's the same module as we are
         {
-            const spec = element.specifiers[0] as ImportSpecifier;
-            importsToBake.push(spec.local.name); // we'll later watch those for replacement
-            importsToRemove.push(index);
+            for (let index2 = 0; index2 < element.specifiers.length; index2++) {
+                const spec = element.specifiers[index2] as ImportSpecifier;
+                importsToBake.push(spec.local.name); // we'll later watch those for replacement
+                importsToRemove.push(index);
+            }
         }
     }
     const trueImportsToRemove =
