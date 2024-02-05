@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "pnpm exec discord-mod-compiler ./index.js BetterDiscord"
   },
   "type": "module",
   "keywords": [],
