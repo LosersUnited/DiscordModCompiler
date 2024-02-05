@@ -8,14 +8,14 @@ import { myPackageName } from "./utils.js";
 if (process.argv.length == 4) {
     const __filename = url.fileURLToPath(import.meta.url);
     const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
-    const supportedClientMods = [...readdirSync(__dirname + "/converters"), "all"];
+    const supportedClientMods = [...readdirSync(`${__dirname}/converters`), "all"];
     const code = readFileSync(process.argv[2], "utf8");
     const ast = parse(code, { sourceType: "module" });
 
     const targetDiscordMod = process.argv[3] + ".js";
     const supported = (sample: string) => supportedClientMods.indexOf(sample) != -1;
     if (supported(targetDiscordMod)) {
-        const filler = import(__dirname + "/converters/" + targetDiscordMod);
+        const filler = import(`${__dirname}/converters/${targetDiscordMod}`);
         filler.then((x: any) => {
             const out = converter(ast);
             const outMod = {
