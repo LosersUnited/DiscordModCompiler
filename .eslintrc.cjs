@@ -12,6 +12,7 @@ module.exports = {
 		"ecmaVersion": 2021,
 		"sourceType": "module",
 	},
+	"ignorePatterns": ["dist/**", "test/**"],
 	"rules": {
 		"arrow-spacing": [
 			"warn",
