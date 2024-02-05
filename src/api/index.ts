@@ -9,3 +9,14 @@ export function pathToFunction(path: string) {
     });
     return final;
 }
+
+export function pathToFunction2(object: string, property: string) {
+    const final: () => any = new Function(`return () => ${object}.${property}`)();
+    Object.defineProperty(final, "object", {
+        value: object,
+    });
+    Object.defineProperty(final, "property", {
+        value: property,
+    });
+    return final;
+}
