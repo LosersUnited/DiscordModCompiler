@@ -16,9 +16,12 @@
   "license": "GPL-3.0",
   "type": "module",
   "devDependencies": {
+    "@babel/core": "^7.23.9",
     "@babel/generator": "^7.23.6",
     "@babel/parser": "^7.23.9",
+    "@babel/plugin-transform-destructuring": "^7.23.3",
     "@babel/types": "^7.23.9",
+    "@types/babel__core": "^7.20.5",
     "@types/babel__generator": "^7.6.8",
     "@types/node": "^20.11.16",
     "@typescript-eslint/eslint-plugin": "^6.20.0",
