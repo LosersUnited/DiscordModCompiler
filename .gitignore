@@ -2,3 +2,4 @@ node_modules
 dist
 *.log
 
+src/converter copy.ts
