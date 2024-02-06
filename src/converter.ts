@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ParseResult } from "@babel/parser";
-import { File, ImportDeclaration, ImportSpecifier, Statement } from "@babel/types";
+import { File, Identifier, ImportDeclaration, ImportSpecifier, MemberExpression, Statement } from "@babel/types";
 import { myPackageName } from "./utils.js";
 
 function removeASTLocation(ast: Statement[] | Statement) {
@@ -15,7 +16,83 @@ function removeASTLocation(ast: Statement[] | Statement) {
     }
 }
 
-export default function (ast: ParseResult<File>): Statement[] {
+function findPathsToType(options: { targetType: string, obj: Statement[] | Statement }): string[] {
+    const results: string[] = [];
+
+    (function findType({
+        targetType,
+        obj,
+        pathToType,
+    }: {
+        targetType: string;
+        obj: Statement | Statement[];
+        pathToType?: string;
+    }) {
+        // const currentPath = pathToType ? `${pathToType}.` : "";
+        const currentPath = pathToType || "";
+
+        if (Array.isArray(obj)) {
+            obj.forEach((item, index) => {
+                findType({
+                    targetType,
+                    obj: item,
+                    // pathToType: `${currentPath}[${index}]`,
+                    pathToType: `${currentPath}.${index}`,
+                });
+            });
+        }
+        else if (typeof obj === 'object' && obj !== null) {
+            if (obj.type === targetType) {
+                results.push(currentPath);
+            }
+
+            for (const key in obj) {
+                if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                    // // @ts-expect-error Iteration of object's keys
+                    // if (Array.isArray(obj[key])) {
+                    //     // @ts-expect-error Iteration of object's keys
+                    //     for (let j = 0; j < obj[key].length; j++) {
+                    //         findType({
+                    //             targetType,
+                    //             // @ts-expect-error Iteration of object's keys
+                    //             obj: obj[key][j],
+                    //             pathToType: `${currentPath}${key}[${j}]`,
+                    //         });
+                    //     }
+                    // }
+                    // @ts-expect-error Iteration of object's keys
+                    if (obj[key] !== null && typeof obj[key] === 'object') {
+                        findType({
+                            targetType,
+                            // @ts-expect-error Iteration of object's keys
+                            obj: obj[key],
+                            // pathToType: `${currentPath}${key}`,
+                            pathToType: `${currentPath}.${key}`,
+                        });
+                    }
+                }
+            }
+        }
+    })(options);
+
+    return results.map(x => x.startsWith(".") ? x.slice(1) : x);
+}
+
+function deepFind<K>(obj: any, path: string): K | undefined {
+    const paths = path.split('.');
+    let current = obj;
+    for (let i = 0; i < paths.length; ++i) {
+        if (current[paths[i]] == undefined) {
+            return undefined;
+        }
+        else {
+            current = current[paths[i]];
+        }
+    }
+    return current;
+}
+
+export default function (ast: ParseResult<File>, targetedDiscordModApiLibrary: any): Statement[] {
     const parsedBody = ast.program.body;
     const importStatements = parsedBody.filter(x => x.type == "ImportDeclaration");
     const importsToBake = [];
@@ -45,7 +122,20 @@ export default function (ast: ParseResult<File>): Statement[] {
          * Example:
          * WebpackApi.getModule(something) -> "WebpackApi" matches signature of an element from importsToBake array -> import WebpackApi ourselves -> find method getModule -> select replacement based on target client mod -> read target's object path and property name -> replace them
          */
-        debugger;
+        // debugger;
+        // console.log(findAllTypesWithPath(element, "MemberExpression"));
+        const paths = findPathsToType({ obj: element, targetType: "MemberExpression" });
+        for (let index2 = 0; index2 < paths.length; index2++) {
+            const element2 = paths[index2];
+            const trueObj = deepFind<MemberExpression>(element, element2);
+            console.log(trueObj);
+            if (trueObj != undefined && importsToBake.includes((trueObj.object as Identifier).name)) {
+                removeASTLocation(trueObj as unknown as Statement);
+                const targetClass = targetedDiscordModApiLibrary.default[(trueObj.object as Identifier).name];
+                (trueObj.object as Identifier).name = targetClass[(trueObj.property as Identifier).name].object;
+                (trueObj.property as Identifier).name = targetClass[(trueObj.property as Identifier).name].property;
+            }
+        }
     }
     return parsedBodyWithoutOurImports;
 }
