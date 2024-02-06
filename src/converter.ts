@@ -122,7 +122,7 @@ export default function (ast: ParseResult<File>, targetedDiscordModApiLibrary: a
          * Example:
          * WebpackApi.getModule(something) -> "WebpackApi" matches signature of an element from importsToBake array -> import WebpackApi ourselves -> find method getModule -> select replacement based on target client mod -> read target's object path and property name -> replace them
          */
-        // debugger;
+        debugger;
         // console.log(findAllTypesWithPath(element, "MemberExpression"));
         const paths = findPathsToType({ obj: element, targetType: "MemberExpression" });
         for (let index2 = 0; index2 < paths.length; index2++) {

@@ -10,7 +10,11 @@ if (process.argv.length == 4) {
     const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
     const supportedClientMods = [...readdirSync(`${__dirname}/converters`), "all"];
     const code = readFileSync(process.argv[2], "utf8");
-    const codeMod = transformSync(code, { plugins: ["@babel/plugin-transform-destructuring", { "useBuiltIns": true }] })?.code;
+    const codeMod = transformSync(code, {
+        plugins: [
+            "@babel/plugin-transform-destructuring",
+        ],
+    })?.code;
     if (!codeMod) {
         process.exit(1);
     }
