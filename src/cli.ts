@@ -32,20 +32,25 @@ const ast = parse(codeMod, { sourceType: "module" });
 // }
 // console.log(ast.errors);
 const targetDiscordMod = process.argv[3] + ".js";
-const supported = (sample: string) => supportedClientMods.indexOf(sample) != -1;
-if (supported(targetDiscordMod)) {
-    const filler = import(url.pathToFileURL(`${__dirname}/converters/${targetDiscordMod}`).href);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    filler.then((x: any) => {
-        const out = converter(ast as File & { errors: [] }, x);
-        const outMod = {
-            ...ast,
-            program: {
-                ...ast.program,
-                body: out,
-            },
-        } as File;
-        const generate = typeof generate_ == "function" ? generate_ : (generate_ as { default: typeof generate_ }).default;
-        console.log(generate(outMod));
-    });
+const isClientModSupported = supportedClientMods.indexOf(targetDiscordMod) != -1;
+
+if (!isClientModSupported) {
+    console.error("Unsupported client mod: " + process.argv[3]);
+    console.error("Supported client mods: " + supportedClientMods.join(", "));
+    process.exit(1);
 }
+
+const filler = import(url.pathToFileURL(`${__dirname}/converters/${targetDiscordMod}`).href);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+filler.then((x: any) => {
+    const out = converter(ast as File & { errors: [] }, x);
+    const outMod = {
+        ...ast,
+        program: {
+            ...ast.program,
+            body: out,
+        },
+    } as File;
+    const generate = typeof generate_ == "function" ? generate_ : (generate_ as { default: typeof generate_ }).default;
+    console.log(generate(outMod));
+});
