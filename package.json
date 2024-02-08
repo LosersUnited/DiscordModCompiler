@@ -8,8 +8,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "cli": "node dist/cli.js",
-    "cli-debug": "node --inspect dist/cli.js",
+    "cli": "tsc && node dist/cli.js",
+    "cli-debug": "tsc && node --inspect dist/cli.js",
     "build": "tsc"
   },
   "keywords": [],
