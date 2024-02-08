@@ -10,10 +10,10 @@ export function getFunctionByPath(path: string) {
     return final;
 }
 
-export function getFunctionByObjectAndProperty(object: string, property: string) {
-    const final: () => any = new Function(`return () => ${object}.${property}`)();
+export function getFunctionByObjectAndProperty(objectName: string, property: string) {
+    const final: () => any = new Function(`return () => ${objectName}.${property}`)();
     Object.defineProperty(final, "object", {
-        value: object,
+        value: objectName,
     });
     Object.defineProperty(final, "property", {
         value: property,
