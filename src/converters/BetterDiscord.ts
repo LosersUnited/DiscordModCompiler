@@ -1,5 +1,5 @@
-import { base_WebpackApi, getFunctionByObjectAndProperty } from "../api/index.js";
-class BD_WebpackApi implements base_WebpackApi {
+import { IBaseWebpackApi, getFunctionByObjectAndProperty } from "../api/index.js";
+class BD_WebpackApi implements IBaseWebpackApi {
     get getModule() {
         return getFunctionByObjectAndProperty("BdApi.Webpack", "getModule");
     }
