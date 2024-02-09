@@ -38,6 +38,9 @@ devDependencies:
   eslint:
     specifier: ^8.56.0
     version: 8.56.0
+  husky:
+    specifier: ^9.0.10
+    version: 9.0.10
   typescript:
     specifier: ^5.3.3
     version: 5.3.3
@@ -976,6 +979,12 @@ packages:
   /has-flag@4.0.0:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
     engines: {node: '>=8'}
+    dev: true
+
+  /husky@9.0.10:
+    resolution: {integrity: sha512-TQGNknoiy6bURzIO77pPRu+XHi6zI7T93rX+QnJsoYFf3xdjKOur+IlfqzJGMHIK/wXrLg+GsvMs8Op7vI2jVA==}
+    engines: {node: '>=18'}
+    hasBin: true
     dev: true
 
   /ignore@5.3.1:

@@ -7,10 +7,12 @@
     "discord-mod-compiler": "dist/cli.js"
   },
   "scripts": {
-    "test": "npm run cli ./test/sample/index.js RePlugged",
+    "test": "tsc && npm run cli-nobuild ./test/sample/index.js RePlugged && npm run cli-nobuild ./test/sample/index.js BetterDiscord",
     "cli": "tsc && node dist/cli.js",
     "cli-debug": "tsc && node --inspect dist/cli.js",
-    "build": "tsc"
+    "cli-nobuild": "node dist/cli.js",
+    "build": "tsc",
+    "prepare": "husky"
   },
   "keywords": [],
   "license": "GPL-3.0",
@@ -27,6 +29,7 @@
     "@typescript-eslint/eslint-plugin": "^6.20.0",
     "@typescript-eslint/parser": "^6.20.0",
     "eslint": "^8.56.0",
+    "husky": "^9.0.10",
     "typescript": "^5.3.3"
   }
 }
