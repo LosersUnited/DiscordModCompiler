@@ -1,22 +1,33 @@
-import base_WebpackApi, { WebpackApi } from "./Webpack/index.js";
+import IBaseWebpackApi, { WebpackApi } from "./Webpack/index.js";
 
-export { base_WebpackApi, WebpackApi };
+export { IBaseWebpackApi, WebpackApi };
 
-export function pathToFunction(path: string) {
-    const final: () => any = new Function("return () => " + path)();
-    Object.defineProperty(final, "path", {
+/**
+ * Creates a function from a given path that gets resolved at runtime.
+ * @param path - The path to create the function from.
+ * @returns The created function.
+ */
+export function createFunctionFromPath(path: string) {
+    const generatedFunction: () => any = new Function("return () => " + path)();
+    Object.defineProperty(generatedFunction, "path", {
         value: path,
     });
-    return final;
+    return generatedFunction;
 }
 
-export function pathToFunction2(object: string, property: string) {
-    const final: () => any = new Function(`return () => ${object}.${property}`)();
-    Object.defineProperty(final, "object", {
-        value: object,
+/**
+ * Creates a function that returns the value of a specified property from an object that gets resolved at runtime.
+ * @param objectName - The name of the object.
+ * @param property - The name of the property.
+ * @returns A function that returns the value of the specified property from the object.
+ */
+export function createFunctionFromObjectProperty(objectName: string, property: string) {
+    const generatedFunction: () => any = new Function(`return () => ${objectName}.${property}`)();
+    Object.defineProperty(generatedFunction, "object", {
+        value: objectName,
     });
-    Object.defineProperty(final, "property", {
+    Object.defineProperty(generatedFunction, "property", {
         value: property,
     });
-    return final;
+    return generatedFunction;
 }

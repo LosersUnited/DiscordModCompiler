@@ -1,6 +1,6 @@
-import { WebpackApi, pathToFunction } from "discord-mod-compiler";
+import { WebpackApi, getFunctionByPath } from "discord-mod-compiler";
 import { readFileSync } from "fs";
-// import { pathToFunction } from "discord-mod-compiler";
+// import { getFunctionByPath } from "discord-mod-compiler";
 function start() {
     // const getModule = WebpackApi.getModule;
 
