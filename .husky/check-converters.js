@@ -17,5 +17,3 @@ for (const file of tsFiles) {
     process.exit(1);
   }
 }
-
-process.exit(1);
