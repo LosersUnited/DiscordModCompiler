@@ -1,7 +1,7 @@
-import { IBaseWebpackApi, getFunctionByObjectAndProperty } from "../api/index.js";
+import { IBaseWebpackApi, createFunctionFromObjectProperty } from "../api/index.js";
 class RPWebpackApi implements IBaseWebpackApi {
     get getModule() {
-        return getFunctionByObjectAndProperty("replugged.webpack", "getModule");
+        return createFunctionFromObjectProperty("replugged.webpack", "getModule");
     }
 }
 export default {

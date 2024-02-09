@@ -1,7 +1,7 @@
-import { IBaseWebpackApi, getFunctionByObjectAndProperty } from "../api/index.js";
+import { IBaseWebpackApi, createFunctionFromObjectProperty } from "../api/index.js";
 class BDWebpackApi implements IBaseWebpackApi {
     get getModule() {
-        return getFunctionByObjectAndProperty("BdApi.Webpack", "getModule");
+        return createFunctionFromObjectProperty("BdApi.Webpack", "getModule");
     }
 }
 export default {
