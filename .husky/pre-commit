@@ -1,3 +1,2 @@
 tsc
-npm run cli-nobuild ./test/sample/index.js RePlugged
-npm run cli-nobuild ./test/sample/index.js BetterDiscord
+node ./.husky/check-converters.js
