@@ -1,9 +1,9 @@
-import { base_WebpackApi, pathToFunction2 } from "../api/index.js";
-class BD_WebpackApi implements base_WebpackApi {
+import { IBaseWebpackApi, createFunctionFromObjectProperty } from "../api/index.js";
+class BDWebpackApi implements IBaseWebpackApi {
     get getModule() {
-        return pathToFunction2("BdApi.Webpack", "getModule");
+        return createFunctionFromObjectProperty("BdApi.Webpack", "getModule");
     }
 }
 export default {
-    WebpackApi: new BD_WebpackApi(), // :skull:
+    WebpackApi: new BDWebpackApi(),
 };

@@ -7,9 +7,9 @@
     "discord-mod-compiler": "dist/cli.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "cli": "node dist/cli.js",
-    "cli-debug": "node --inspect dist/cli.js",
+    "test": "npm run cli ./test/sample/index.js RePlugged",
+    "cli": "tsc && node dist/cli.js",
+    "cli-debug": "tsc && node --inspect dist/cli.js",
     "build": "tsc"
   },
   "keywords": [],
