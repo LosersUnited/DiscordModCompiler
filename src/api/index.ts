@@ -3,7 +3,7 @@ import IBaseWebpackApi, { WebpackApi } from "./Webpack/index.js";
 export { IBaseWebpackApi, WebpackApi };
 
 /**
- * Creates a function from a given path.
+ * Creates a function from a given path that gets resolved at runtime.
  * @param path - The path to create the function from.
  * @returns The created function.
  */
@@ -16,7 +16,7 @@ export function createFunctionFromPath(path: string) {
 }
 
 /**
- * Creates a function that returns the value of a specified property from an object.
+ * Creates a function that returns the value of a specified property from an object that gets resolved at runtime.
  * @param objectName - The name of the object.
  * @param property - The name of the property.
  * @returns A function that returns the value of the specified property from the object.
