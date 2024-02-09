@@ -7,7 +7,7 @@
     "discord-mod-compiler": "dist/cli.js"
   },
   "scripts": {
-    "test": "npm run cli ./test/SampleBD.plugin.js RePlugged",
+    "test": "npm run cli ./test/sample/index.js RePlugged",
     "cli": "tsc && node dist/cli.js",
     "cli-debug": "tsc && node --inspect dist/cli.js",
     "build": "tsc"
