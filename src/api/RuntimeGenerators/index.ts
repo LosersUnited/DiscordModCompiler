@@ -1,7 +1,3 @@
-import IBaseWebpackApi, { WebpackApi } from "./Webpack/index.js";
-
-export { IBaseWebpackApi, WebpackApi };
-
 /**
  * Creates a function from a given path that gets resolved at runtime.
  * @param path - The path to create the function from.
