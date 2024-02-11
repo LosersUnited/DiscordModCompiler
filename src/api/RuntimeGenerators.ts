@@ -1,14 +1,3 @@
-import IBaseWebpackApi, { WebpackApi } from "./Webpack/index.js";
-
-interface ModImplementation {
-    WebpackApi: typeof WebpackApi,
-    /**
-     * shall be true when a mod requires the Dev to bundle their code into single file
-     */
-    importsForbidden?: boolean,
-}
-export { IBaseWebpackApi, WebpackApi, ModImplementation };
-
 /**
  * Creates a function from a given path that gets resolved at runtime.
  * @param path - The path to create the function from.

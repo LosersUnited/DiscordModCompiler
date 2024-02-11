@@ -1,7 +1,6 @@
-interface IBaseWebpackApi {
+export interface IBaseWebpackApi {
     getModule(filter: (match: any) => boolean): any;
 }
-export default IBaseWebpackApi;
 
 class DummyWebpackApi implements IBaseWebpackApi {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

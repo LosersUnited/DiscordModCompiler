@@ -2,7 +2,7 @@
 import { ParseResult } from "@babel/parser";
 import { File, Identifier, ImportDeclaration, ImportSpecifier, MemberExpression, Statement } from "@babel/types";
 import { NonFunctionType, myPackageName } from "./utils.js";
-import { ModImplementation } from "./api/index.js";
+import { IModImplementation } from "./api/ModImplementation";
 
 function removeASTLocation(ast: Statement[] | Statement) {
     if (Array.isArray(ast)) {
@@ -95,7 +95,7 @@ function deepFind<K>(obj: any, path: string): K | undefined {
 
 const getKeyValue = <T, K extends keyof T>(obj: T, key: K): T[K] => obj[key];
 
-export default function (ast: ParseResult<File>, targetedDiscordModApiLibrary: { default: ModImplementation }): Statement[] {
+export default function (ast: ParseResult<File>, targetedDiscordModApiLibrary: { default: IModImplementation }): Statement[] {
     const parsedBody = ast.program.body;
     const importStatements = parsedBody.filter(x => x.type == "ImportDeclaration");
     const importsToBake = [];
@@ -134,11 +134,11 @@ export default function (ast: ParseResult<File>, targetedDiscordModApiLibrary: {
             console.log(trueObj);
             if (trueObj != undefined && importsToBake.includes((trueObj.object as Identifier).name)) {
                 removeASTLocation(trueObj as unknown as Statement);
-                const propDesc = Object.getOwnPropertyDescriptor(targetedDiscordModApiLibrary.default, (trueObj.object as Identifier).name as keyof ModImplementation);
+                const propDesc = Object.getOwnPropertyDescriptor(targetedDiscordModApiLibrary.default, (trueObj.object as Identifier).name as keyof IModImplementation);
                 if (!propDesc)
                     continue;
                 // const targetClass = targetedDiscordModApiLibrary.default[(trueObj.object as Identifier).name];
-                const targetClass: ModImplementation[keyof ModImplementation] = propDesc.value ?? propDesc.get!(); // TODO: don't make value `any`
+                const targetClass: IModImplementation[keyof IModImplementation] = propDesc.value ?? propDesc.get!(); // TODO: don't make value `any`
                 if (targetClass == undefined)
                     continue;
                 const replacementObject = getKeyValue(targetClass, (trueObj.property as Identifier).name as keyof typeof targetClass) as { object: string, property: string };
