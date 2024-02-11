@@ -1,4 +1,4 @@
-import { IBaseWebpackApi, createFunctionFromObjectProperty } from "../api/index.js";
+import { IBaseWebpackApi, ModImplementation, createFunctionFromObjectProperty } from "../api/index.js";
 
 class BDWebpackApi implements IBaseWebpackApi {
     get getModule() {
@@ -8,4 +8,5 @@ class BDWebpackApi implements IBaseWebpackApi {
 
 export default {
     WebpackApi: new BDWebpackApi(),
-};
+    importsForbidden: true,
+} as ModImplementation;

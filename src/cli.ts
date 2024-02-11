@@ -43,6 +43,8 @@ if (!isClientModSupported) {
 const filler = import(url.pathToFileURL(`${__dirname}/converters/${targetDiscordMod}.js`).href);
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 filler.then((x: { default: ModImplementation }) => {
+    if (x.default.importsForbidden)
+        console.warn('\x1b[33m%s\x1b[0m', `Warning: Target mod ${targetDiscordMod} requires your code to be bundled into single file`);
     const out = converter(ast as File & { errors: [] }, x);
     const outMod = {
         ...ast,
