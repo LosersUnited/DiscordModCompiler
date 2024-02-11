@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ParseResult } from "@babel/parser";
 import { File, Identifier, ImportDeclaration, ImportSpecifier, MemberExpression, Statement } from "@babel/types";
-import { myPackageName } from "./utils.js";
+import { NonFunctionType, myPackageName } from "./utils.js";
+import { ModImplementation } from "./api/index.js";
 
 function removeASTLocation(ast: Statement[] | Statement) {
     if (Array.isArray(ast)) {
@@ -92,7 +93,9 @@ function deepFind<K>(obj: any, path: string): K | undefined {
     return current;
 }
 
-export default function (ast: ParseResult<File>, targetedDiscordModApiLibrary: any): Statement[] {
+const getKeyValue = <T, K extends keyof T>(obj: T, key: K): T[K] => obj[key];
+
+export default function (ast: ParseResult<File>, targetedDiscordModApiLibrary: { default: ModImplementation }): Statement[] {
     const parsedBody = ast.program.body;
     const importStatements = parsedBody.filter(x => x.type == "ImportDeclaration");
     const importsToBake = [];
@@ -131,9 +134,16 @@ export default function (ast: ParseResult<File>, targetedDiscordModApiLibrary: a
             console.log(trueObj);
             if (trueObj != undefined && importsToBake.includes((trueObj.object as Identifier).name)) {
                 removeASTLocation(trueObj as unknown as Statement);
-                const targetClass = targetedDiscordModApiLibrary.default[(trueObj.object as Identifier).name];
-                (trueObj.object as Identifier).name = targetClass[(trueObj.property as Identifier).name].object;
-                (trueObj.property as Identifier).name = targetClass[(trueObj.property as Identifier).name].property;
+                const propDesc = Object.getOwnPropertyDescriptor(targetedDiscordModApiLibrary.default, (trueObj.object as Identifier).name as keyof ModImplementation);
+                if (!propDesc)
+                    continue;
+                // const targetClass = targetedDiscordModApiLibrary.default[(trueObj.object as Identifier).name];
+                const targetClass: ModImplementation[keyof ModImplementation] = propDesc.value ?? propDesc.get!(); // TODO: don't make value `any`
+                if (targetClass == undefined)
+                    continue;
+                const replacementObject = getKeyValue(targetClass, (trueObj.property as Identifier).name as keyof typeof targetClass) as { object: string, property: string };
+                (trueObj.object as Identifier).name = replacementObject.object;
+                (trueObj.property as Identifier).name = replacementObject.property;
             }
         }
     }

@@ -6,7 +6,7 @@ import converter from "./converter.js";
 import { File } from "@babel/types";
 import { myPackageName } from "./utils.js";
 import { transformSync } from "@babel/core";
-
+import { ModImplementation } from "./api/index.js";
 
 if (process.argv.length != 4) {
     console.log("Usage:\n\t" + myPackageName + " <input file> <target client mod>\nExample:\n\t" + myPackageName + " ./index.js BetterDiscord");
@@ -42,7 +42,7 @@ if (!isClientModSupported) {
 
 const filler = import(url.pathToFileURL(`${__dirname}/converters/${targetDiscordMod}.js`).href);
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-filler.then((x: any) => {
+filler.then((x: { default: ModImplementation }) => {
     const out = converter(ast as File & { errors: [] }, x);
     const outMod = {
         ...ast,
@@ -52,5 +52,5 @@ filler.then((x: any) => {
         },
     } as File;
     const generate = typeof generate_ == "function" ? generate_ : (generate_ as { default: typeof generate_ }).default;
-    console.log(generate(outMod));
+    console.log("generated code: ", generate(outMod).code);
 });
