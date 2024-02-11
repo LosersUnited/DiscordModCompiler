@@ -9,12 +9,4 @@ class DummyWebpackApi implements IBaseWebpackApi {
     }
 }
 
-export interface ModImplementation {
-    WebpackApi: typeof WebpackApi,
-    /**
-     * shall be true when a mod requires the Dev to bundle their code into single file
-     */
-    importsForbidden?: boolean,
-}
-
 export const WebpackApi = new DummyWebpackApi();

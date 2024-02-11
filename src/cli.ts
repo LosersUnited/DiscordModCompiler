@@ -6,10 +6,10 @@ import converter from "./converter.js";
 import { File } from "@babel/types";
 import { myPackageName } from "./utils.js";
 import { transformSync } from "@babel/core";
-import { ModImplementation } from "./api/index.js";
+import { ModImplementation } from "./api/ModImplementation.js";
 
 if (process.argv.length != 4) {
-    console.log("Usage:\n\t" + myPackageName + " <input file> <target client mod>\nExample:\n\t" + myPackageName + " ./index.js BetterDiscord");
+    console.error(`Usage:\n\t${myPackageName} <input file> <target client mod>\nExample:\n\t${myPackageName} ./index.js BetterDiscord`);
     process.exit(1);
 }
 

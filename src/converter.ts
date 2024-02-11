@@ -2,7 +2,7 @@
 import { ParseResult } from "@babel/parser";
 import { File, Identifier, ImportDeclaration, ImportSpecifier, MemberExpression, Statement } from "@babel/types";
 import { NonFunctionType, myPackageName } from "./utils.js";
-import { ModImplementation } from "./api/index.js";
+import { ModImplementation } from "./api/ModImplementation";
 
 function removeASTLocation(ast: Statement[] | Statement) {
     if (Array.isArray(ast)) {

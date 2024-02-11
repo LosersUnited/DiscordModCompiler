@@ -1,5 +1,6 @@
-import { createFunctionFromObjectProperty } from "../api/RuntimeGenerators/index.js";
-import { IBaseWebpackApi, ModImplementation } from "../api/Webpack/index.js";
+import { ModImplementation } from "../api/ModImplementation.js";
+import { createFunctionFromObjectProperty } from "../api/RuntimeGenerators.js";
+import { IBaseWebpackApi } from "../api/Webpack.js";
 
 class RPWebpackApi implements IBaseWebpackApi {
     get getModule() {
