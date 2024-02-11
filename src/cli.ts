@@ -6,7 +6,7 @@ import converter from "./converter.js";
 import { File } from "@babel/types";
 import { myPackageName } from "./utils.js";
 import { transformSync } from "@babel/core";
-import { ModImplementation } from "./api/ModImplementation.js";
+import { IModImplementation } from "./api/ModImplementation.js";
 
 if (process.argv.length != 4) {
     console.error(`Usage:\n\t${myPackageName} <input file> <target client mod>\nExample:\n\t${myPackageName} ./index.js BetterDiscord`);
@@ -42,7 +42,7 @@ if (!isClientModSupported) {
 
 const filler = import(url.pathToFileURL(`${__dirname}/converters/${targetDiscordMod}.js`).href);
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-filler.then((x: { default: ModImplementation }) => {
+filler.then((x: { default: IModImplementation }) => {
     if (x.default.importsForbidden)
         console.warn('\x1b[33m%s\x1b[0m', `Warning: Target mod ${targetDiscordMod} requires your code to be bundled into single file`);
     const out = converter(ast as File & { errors: [] }, x);
