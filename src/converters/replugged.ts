@@ -3,9 +3,63 @@ import { createFunctionFromObjectProperty } from "../api/RuntimeGenerators.js";
 import { IBaseWebpackApi } from "../api/Webpack.js";
 
 class RPWebpackApi implements IBaseWebpackApi {
+    // get getAllByKeys() {
+    //     return createFunctionFromObjectProperty("replugged.webpack", "getAllByKeys");
+    // }
+
+    // get getAllByPrototypeKeys() {
+    //     return createFunctionFromObjectProperty("replugged.webpack", "getAllByPrototypeKeys");
+    // }
+
+    // get getAllByRegex() {
+    //     return createFunctionFromObjectProperty("replugged.webpack", "getAllByRegex");
+    // }
+
+    // get getAllByStrings() {
+    //     return createFunctionFromObjectProperty("replugged.webpack", "getAllByStrings");
+    // }
+
+    // get getBulk() {
+    //     return createFunctionFromObjectProperty("replugged.webpack", "getBulk");
+    // }
+
+    get getByKeys() {
+        return createFunctionFromObjectProperty("replugged.webpack", "getById");
+    }
+
+    // get getByPrototypeKeys() {
+    //     return createFunctionFromObjectProperty("replugged.webpack", "getByPrototypeKeys");
+    // }
+
+    // get getByRegex() {
+    //     return createFunctionFromObjectProperty("replugged.webpack", "getByRegex");
+    // }
+
+    // get getByStrings() {
+    //     return createFunctionFromObjectProperty("replugged.webpack", "getByStrings");
+    // }
+
     get getModule() {
         return createFunctionFromObjectProperty("replugged.webpack", "getModule");
     }
+
+    // get getModules() {
+    //     return createFunctionFromObjectProperty("replugged.webpack", "getModules");
+    // }
+
+    get getStore() {
+        return createFunctionFromObjectProperty("replugged.webpack", "getByStoreName");
+    }
+
+    // get getWithKey() {
+    //     return createFunctionFromObjectProperty("replugged.webpack", "getWithKey");
+    // }
+
+    // Filters = {
+    //     byProps: () => {
+    //         return createFunctionFromObjectProperty("replugged.webpack.filters", "byProps");
+    //     },
+    // };
 }
 
 export default {
