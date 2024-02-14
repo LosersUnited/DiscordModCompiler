@@ -1,5 +1,6 @@
 import { IModImplementation } from "../api/ModImplementation.js";
 import { createFunctionFromObjectProperty } from "../api/RuntimeGenerators.js";
+import { BaseDataApi } from "../api/modules/Data.js";
 import { BaseWebpackApi } from "../api/modules/Webpack.js";
 
 class BDWebpackApi extends BaseWebpackApi {
@@ -94,7 +95,23 @@ class BDWebpackApi extends BaseWebpackApi {
     };
 }
 
+class BDDataApi extends BaseDataApi {
+    get save() {
+        return createFunctionFromObjectProperty("BdApi.Data", "save");
+    }
+
+    get load() {
+        return createFunctionFromObjectProperty("BdApi.Data", "load");
+    }
+
+    get delete() {
+        return createFunctionFromObjectProperty("BdApi.Data", "delete");
+    }
+}
+
 export default {
     WebpackApi: new BDWebpackApi(),
+    Data: new BDDataApi(),
+
     importsForbidden: true,
 } as IModImplementation;

@@ -1,5 +1,6 @@
 import { IModImplementation } from "../api/ModImplementation.js";
 import { createFunctionFromObjectProperty } from "../api/RuntimeGenerators.js";
+import { BaseDataApi } from "../api/modules/Data.js";
 import { BaseWebpackApi } from "../api/modules/Webpack.js";
 
 class RPWebpackApi extends BaseWebpackApi {
@@ -62,6 +63,28 @@ class RPWebpackApi extends BaseWebpackApi {
     };
 }
 
+class RPDataApi extends BaseDataApi {
+    get save() {
+        return () => {
+            throw new Error("Method not implemented.");
+        };
+    }
+
+    get load() {
+        return () => {
+            throw new Error("Method not implemented.");
+        };
+    }
+
+    get delete() {
+        return () => {
+            throw new Error("Method not implemented.");
+        };
+    }
+}
+
+
 export default {
     WebpackApi: new RPWebpackApi(),
+    Data: new RPDataApi(),
 } as IModImplementation;
