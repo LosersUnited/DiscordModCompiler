@@ -54,6 +54,12 @@ class BDWebpackApi extends BaseWebpackApi {
     get getWithKey() {
         return createFunctionFromObjectProperty("BdApi.Webpack", "getWithKey");
     }
+
+    Filters = {
+        get byProps() {
+            return createFunctionFromObjectProperty("BdApi.Webpack.Filters", "byProps");
+        },
+    };
 }
 
 export default {

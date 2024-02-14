@@ -29,19 +29,43 @@ export class BaseWebpackApi {
     } // Equivalento to getByStoreName in Replugged
     // getWithKey(key: string, options?: any): any;
 
+    Filters = {
+        // get byDisplayName() : (displayName: string) => any {
+        //     throw new Error("Method not implemented. This is a dummy class.");
+        // },
 
-    // Filters: Soon
-    // Filters: {
-        // byDisplayName: (displayName: string) => any;
-        // byKeys: (...keys: string[]) => any;
-        // byProps: (...keys: string[]) => any;
-        // byPrototypeFields: (...keys: string[]) => any;
-        // byPrototypeKeys: (...keys: string[]) => any;
-        // byRegex: (regex: string, options?: any) => any;
-        // byStoreName: (storeName: string) => any;
-        // byStrings: (...strings: string[]) => any;
-        // combine: (...filters: any[]) => any;
-    // }
+        // get byKeys() : (...keys: string[]) => any {
+        //     throw new Error("Method not implemented. This is a dummy class.");
+        // },
+
+        get byProps() : (...props: string[]) => any {
+            throw new Error("Method not implemented. This is a dummy class.");
+        },
+
+        // get byPrototypeFields() : (...keys: string[]) => any {
+        //     throw new Error("Method not implemented. This is a dummy class.");
+        // },
+
+        // get byPrototypeKeys() : (...keys: string[]) => any {
+        //     throw new Error("Method not implemented. This is a dummy class.");
+        // },
+
+        // get byRegex() : (regex: string, options?: any) => any {
+        //     throw new Error("Method not implemented. This is a dummy class.");
+        // },
+
+        // get byStoreName() : (storeName: string) => any {
+        //     throw new Error("Method not implemented. This is a dummy class.");
+        // },
+
+        // get byStrings() : (...strings: string[]) => any {
+        //     throw new Error("Method not implemented. This is a dummy class.");
+        // },
+
+        // get combine() : (...filters: any[]) => any {
+        //     throw new Error("Method not implemented. This is a dummy class.");
+        // },
+    };
 }
 
 export const WebpackApi = new BaseWebpackApi();

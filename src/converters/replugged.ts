@@ -55,11 +55,11 @@ class RPWebpackApi extends BaseWebpackApi {
     //     return createFunctionFromObjectProperty("replugged.webpack", "getWithKey");
     // }
 
-    // Filters = {
-    //     byProps: () => {
-    //         return createFunctionFromObjectProperty("replugged.webpack.filters", "byProps");
-    //     },
-    // };
+    Filters = {
+        get byProps() {
+            return createFunctionFromObjectProperty("replugged.webpack.filters", "byProps");
+        },
+    };
 }
 
 export default {
