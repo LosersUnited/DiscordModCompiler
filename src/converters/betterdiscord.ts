@@ -111,7 +111,7 @@ class BDDataApi extends BaseDataApi {
 
 export default {
     WebpackApi: new BDWebpackApi(),
-    Data: new BDDataApi(),
+    DataApi: new BDDataApi(),
 
     importsForbidden: true,
 } as IModImplementation;

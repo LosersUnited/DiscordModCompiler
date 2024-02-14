@@ -64,27 +64,21 @@ class RPWebpackApi extends BaseWebpackApi {
 }
 
 class RPDataApi extends BaseDataApi {
-    get save() {
-        return () => {
-            throw new Error("Method not implemented.");
-        };
-    }
+    // get save() {
 
-    get load() {
-        return () => {
-            throw new Error("Method not implemented.");
-        };
-    }
+    // }
 
-    get delete() {
-        return () => {
-            throw new Error("Method not implemented.");
-        };
-    }
+    // get load() {
+
+    // }
+
+    // get delete() {
+
+    // }
 }
 
 
 export default {
     WebpackApi: new RPWebpackApi(),
-    Data: new RPDataApi(),
+    DataApi: new RPDataApi(),
 } as IModImplementation;
