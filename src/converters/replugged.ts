@@ -1,8 +1,8 @@
 import { IModImplementation } from "../api/ModImplementation.js";
 import { createFunctionFromObjectProperty } from "../api/RuntimeGenerators.js";
-import { IBaseWebpackApi } from "../api/Webpack.js";
+import { BaseWebpackApi } from "../api/Webpack.js";
 
-class RPWebpackApi implements IBaseWebpackApi {
+class RPWebpackApi extends BaseWebpackApi {
     // get getAllByKeys() {
     //     return createFunctionFromObjectProperty("replugged.webpack", "getAllByKeys");
     // }
