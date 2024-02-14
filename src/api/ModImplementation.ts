@@ -1,4 +1,4 @@
-import { WebpackApi } from "./Webpack.js";
+import { WebpackApi } from "./modules/Webpack.js";
 
 export interface IModImplementation {
     WebpackApi: typeof WebpackApi,
