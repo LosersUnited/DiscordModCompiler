@@ -56,8 +56,40 @@ class BDWebpackApi extends BaseWebpackApi {
     }
 
     Filters = {
+        get byDisplayName() {
+            return createFunctionFromObjectProperty("BdApi.Webpack.Filters", "byDisplayName");
+        },
+
+        get byKeys() {
+            return createFunctionFromObjectProperty("BdApi.Webpack.Filters", "byKeys");
+        },
+
         get byProps() {
             return createFunctionFromObjectProperty("BdApi.Webpack.Filters", "byProps");
+        },
+
+        get byPrototypeFields() {
+            return createFunctionFromObjectProperty("BdApi.Webpack.Filters", "byPrototypeFields");
+        },
+
+        get byPrototypeKeys() {
+            return createFunctionFromObjectProperty("BdApi.Webpack.Filters", "byPrototypeKeys");
+        },
+
+        get byRegex() {
+            return createFunctionFromObjectProperty("BdApi.Webpack.Filters", "byRegex");
+        },
+
+        get byStoreName() {
+            return createFunctionFromObjectProperty("BdApi.Webpack.Filters", "byStoreName");
+        },
+
+        get byStrings() {
+            return createFunctionFromObjectProperty("BdApi.Webpack.Filters", "byStrings");
+        },
+
+        get combine() {
+            return createFunctionFromObjectProperty("BdApi.Webpack.Filters", "combine");
         },
     };
 }
