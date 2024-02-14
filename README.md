@@ -6,7 +6,7 @@ Allows people to compile javascript into any mod, replugged, vencord (maybe) Bet
 - [x] Automated tests
 - [ ] Basic plugin development API
 - [ ] Full BetterDiscord support
--    - [ ] Webpack
+-    - [x] Webpack
 -    - [ ] Data
 -    - [ ] Patcher
 - [ ] Full RePlugged support
