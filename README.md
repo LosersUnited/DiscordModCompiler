@@ -8,11 +8,15 @@ Allows people to compile javascript into any mod, replugged, vencord (maybe) Bet
 - [ ] Full BetterDiscord support
 -    - [x] Webpack
 -    - [x] Data
--    - [ ] Patcher
+-    - [x] Patcher
+-    - [ ] Ui
+-    - [ ] Utils
 - [ ] Full RePlugged support
 -    - [ ] Webpack
 -    - [ ] Data
 -    - [ ] Patcher
+-    - [ ] Ui
+-    - [ ] Utils
 - [ ] Compilation to UserScript with util methods embedding
 ## How to use?
 1. (Re)Write your plugin using our generic plugin format, you can use ts, js, whatever
