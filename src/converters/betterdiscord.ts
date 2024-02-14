@@ -1,6 +1,7 @@
 import { IModImplementation } from "../api/ModImplementation.js";
 import { createFunctionFromObjectProperty } from "../api/RuntimeGenerators.js";
 import { BaseDataApi } from "../api/modules/Data.js";
+import { BasePatcherApi } from "../api/modules/Patcher.js";
 import { BaseWebpackApi } from "../api/modules/Webpack.js";
 
 class BDWebpackApi extends BaseWebpackApi {
@@ -109,9 +110,32 @@ class BDDataApi extends BaseDataApi {
     }
 }
 
+class BDPatcherApi extends BasePatcherApi {
+    get before() {
+        return createFunctionFromObjectProperty("BdApi.Patcher", "before");
+    }
+
+    get instead() {
+        return createFunctionFromObjectProperty("BdApi.Patcher", "instead");
+    }
+
+    get after() {
+        return createFunctionFromObjectProperty("BdApi.Patcher", "after");
+    }
+
+    get insteadOf() {
+        return createFunctionFromObjectProperty("BdApi.Patcher", "insteadOf");
+    }
+
+    get unpatchAll() {
+        return createFunctionFromObjectProperty("BdApi.Patcher", "unpatchAll");
+    }
+}
+
 export default {
     WebpackApi: new BDWebpackApi(),
     DataApi: new BDDataApi(),
+    PatcherApi: new BDPatcherApi(),
 
     importsForbidden: true,
 } as IModImplementation;

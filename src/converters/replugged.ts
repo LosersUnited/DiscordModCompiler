@@ -1,6 +1,7 @@
 import { IModImplementation } from "../api/ModImplementation.js";
 import { createFunctionFromObjectProperty } from "../api/RuntimeGenerators.js";
 import { BaseDataApi } from "../api/modules/Data.js";
+import { BasePatcherApi } from "../api/modules/Patcher.js";
 import { BaseWebpackApi } from "../api/modules/Webpack.js";
 
 class RPWebpackApi extends BaseWebpackApi {
@@ -77,8 +78,31 @@ class RPDataApi extends BaseDataApi {
     // }
 }
 
+class RPPatcherApi extends BasePatcherApi {
+    // get before() {
+
+    // }
+
+    // get instead() {
+
+    // }
+
+    // get after() {
+
+    // }
+
+    // get getPatchesByCaller() {
+
+    // }
+
+    // get unpatchAll() {
+
+    // }
+}
+
 
 export default {
     WebpackApi: new RPWebpackApi(),
     DataApi: new RPDataApi(),
+    PatcherApi: new RPPatcherApi(),
 } as IModImplementation;
