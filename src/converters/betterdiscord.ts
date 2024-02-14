@@ -4,7 +4,7 @@ import { BaseDataApi } from "../api/modules/Data.js";
 import { BasePatcherApi } from "../api/modules/Patcher.js";
 import { BaseWebpackApi } from "../api/modules/Webpack.js";
 
-class BDWebpackApi extends BaseWebpackApi {
+class BDWebpackApi implements BaseWebpackApi {
     get getAllByKeys() {
         return createFunctionFromObjectProperty("BdApi.Webpack", "getAllByKeys");
     }
@@ -96,7 +96,7 @@ class BDWebpackApi extends BaseWebpackApi {
     };
 }
 
-class BDDataApi extends BaseDataApi {
+class BDDataApi implements BaseDataApi {
     get save() {
         return createFunctionFromObjectProperty("BdApi.Data", "save");
     }
@@ -110,7 +110,7 @@ class BDDataApi extends BaseDataApi {
     }
 }
 
-class BDPatcherApi extends BasePatcherApi {
+class BDPatcherApi implements BasePatcherApi {
     get before() {
         return createFunctionFromObjectProperty("BdApi.Patcher", "before");
     }

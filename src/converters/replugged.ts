@@ -4,7 +4,7 @@ import { BaseDataApi } from "../api/modules/Data.js";
 import { BasePatcherApi } from "../api/modules/Patcher.js";
 import { BaseWebpackApi } from "../api/modules/Webpack.js";
 
-class RPWebpackApi extends BaseWebpackApi {
+class RPWebpackApi implements BaseWebpackApi {
     // get getAllByKeys() {
     //     return createFunctionFromObjectProperty("replugged.webpack", "getAllByKeys");
     // }
@@ -64,7 +64,7 @@ class RPWebpackApi extends BaseWebpackApi {
     };
 }
 
-class RPDataApi extends BaseDataApi {
+class RPDataApi implements BaseDataApi {
     // get save() {
 
     // }
@@ -78,7 +78,7 @@ class RPDataApi extends BaseDataApi {
     // }
 }
 
-class RPPatcherApi extends BasePatcherApi {
+class RPPatcherApi implements BasePatcherApi {
     // get before() {
 
     // }
