@@ -71,11 +71,7 @@ export class BaseWebpackApi {
      * @return {Any}
      */
     // getByRegex(regex: string, options?: any): any;
-/**
-     * Finds all modules with a set of strings.
-     * @param {...String} strings Strings to use to filter modules
-     * @return {Any[]}
-     */
+
     /**
      * Finds a single module using a set of strings.
      * @param {...String} props Strings to use to filter modules
