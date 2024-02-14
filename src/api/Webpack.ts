@@ -169,7 +169,7 @@ export class BaseWebpackApi {
         },
 
         /*
-         * @deprecated on betterdiscord, didn't check if it's the same on replugged
+         * @deprecated on betterdiscord, doesn't exist on replugged
          */
         // get byPrototypeFields() : (...keys: string[]) => any {
         //     throw new Error("Method not implemented. This is a dummy class.");
