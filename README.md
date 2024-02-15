@@ -1,27 +1,42 @@
 # DiscordModCompiler
-Allows people to compile javascript into any mod, replugged, vencord (maybe) BetterDiscord etc...
-## TODO
+
+DiscordModCompiler is a tool that allows developers to compile JavaScript into various mod formats, including RePlugged, BetterDiscord, and potentially Vencord.
+
+## Features
+
+- Resolves placeholders to actual client mod equivalent functions
+- Includes tests and automated tests
+- Aims to provide a basic plugin development API
+- Aims to fully support BetterDiscord and RePlugged
+- Plans to support compilation to UserScript with util methods embedding
+
+## Progress
+
 - [x] Resolve placeholders to actual client mod equivalent functions
 - [x] Tests
 - [x] Automated tests
 - [ ] Basic plugin development API
 - [ ] Full BetterDiscord support
--    - [x] Webpack
--    - [x] Data
--    - [x] Patcher
--    - [ ] Ui
--    - [ ] Utils
+    - [x] Webpack
+    - [x] Data
+    - [x] Patcher
+    - [ ] UI
+    - [ ] Utils
 - [ ] Full RePlugged support
--    - [ ] Webpack
--    - [ ] Data
--    - [ ] Patcher
--    - [ ] Ui
--    - [ ] Utils
+    - [ ] Webpack
+    - [ ] Data
+    - [ ] Patcher
+    - [ ] UI
+    - [ ] Utils
 - [ ] Compilation to UserScript with util methods embedding
-## How to use?
-1. (Re)Write your plugin using our generic plugin format, you can use ts, js, whatever
-2. Run your transpiler if you use something different than JavaScript
-3. Run this tool
-4. Run your bundler if needed
-## What?
-### Just take a look at `test/sample`
+
+## Usage
+
+1. Write or rewrite your plugin using our generic plugin format. You can use TypeScript, JavaScript, or any other language that transpiles to JavaScript.
+2. If you're using a language other than JavaScript, run your transpiler.
+3. Run DiscordModCompiler.
+4. If necessary, run your bundler.
+
+## Example
+
+For an example of how to use DiscordModCompiler, take a look at the `test/sample` directory in this repository.
