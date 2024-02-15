@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ParseResult } from "@babel/parser";
 import { File, Identifier, ImportDeclaration, ImportSpecifier, MemberExpression, Statement } from "@babel/types";
-import { NonFunctionType, myPackageName } from "./utils.js";
+import { NonFunctionType, getKeyValue, myPackageName } from "./utils.js";
 import { IModImplementation } from "./api/ModImplementation";
+import { addCode } from "./api/RuntimeGenerators.js";
 
 function removeASTLocation(ast: Statement[] | Statement) {
     if (Array.isArray(ast)) {
@@ -93,9 +94,7 @@ function deepFind<K>(obj: any, path: string): K | undefined {
     return current;
 }
 
-const getKeyValue = <T, K extends keyof T>(obj: T, key: K): T[K] => obj[key];
-
-export default function (ast: ParseResult<File>, targetedDiscordModApiLibrary: { default: IModImplementation }): Statement[] {
+export default async function (ast: ParseResult<File>, targetedDiscordModApiLibrary: { default: IModImplementation }): Promise<Statement[]> {
     const parsedBody = ast.program.body;
     const importStatements = parsedBody.filter(x => x.type == "ImportDeclaration");
     const importsToBake = [];
@@ -147,5 +146,6 @@ export default function (ast: ParseResult<File>, targetedDiscordModApiLibrary: {
             }
         }
     }
+    parsedBodyWithoutOurImports.unshift(...await addCode());
     return parsedBodyWithoutOurImports;
 }
