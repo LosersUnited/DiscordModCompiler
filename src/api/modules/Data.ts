@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-export class BaseDataApi {
+export class BaseData {
     /**
      * Saves JSON-serializable data.
      *
@@ -34,4 +34,4 @@ export class BaseDataApi {
     // }
 }
 
-export const DataApi = new BaseDataApi();
+export const Data = new BaseData();

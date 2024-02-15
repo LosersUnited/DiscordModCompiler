@@ -1,13 +1,13 @@
-import { WebpackApi } from "discord-mod-compiler";
+import { RandomName as Webpack } from "discord-mod-compiler";
 
 function start() {
-    const getModuleType1 = WebpackApi.getModule;
+    const getModuleType1 = Webpack.getModule;
     const someModuleType1 = getModule(x => x._sendMessage);
 
-    const { getModule: getModuleType2 } = WebpackApi;
+    const { getModule: getModuleType2 } = Webpack;
     const someModuleType2 = getModuleType2(x => x._sendMessage);
-    
-    const someModuleType3 = WebpackApi.getModule(x => x._sendMessage);
+
+    const someModuleType3 = Webpack.getModule(x => x._sendMessage);
 
     const modules = [
         getModuleType1,
@@ -17,9 +17,5 @@ function start() {
         someModuleType3
     ]
 
-    if (modules.any(x => x === undefined)) {
-        throw new Error("WebpackApi.getModule is not working");
-    } else {
-        console.log("WebpackApi.getModule is working");
-    }
+    console.log(Webpack);
 }

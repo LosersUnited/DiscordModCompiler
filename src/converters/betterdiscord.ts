@@ -1,10 +1,12 @@
 import { IModImplementation } from "../api/ModImplementation.js";
 import { createFunctionFromObjectProperty } from "../api/RuntimeGenerators.js";
-import { BaseDataApi } from "../api/modules/Data.js";
-import { BasePatcherApi } from "../api/modules/Patcher.js";
-import { BaseWebpackApi } from "../api/modules/Webpack.js";
+import { BaseData } from "../api/modules/Data.js";
+import { BasePatcher } from "../api/modules/Patcher.js";
+import { BaseUi } from "../api/modules/Ui.js";
+import { BaseUtils } from "../api/modules/Utils.js";
+import { BaseWebpack } from "../api/modules/Webpack.js";
 
-class BDWebpackApi implements BaseWebpackApi {
+class BDWebpack implements BaseWebpack {
     get getAllByKeys() {
         return createFunctionFromObjectProperty("BdApi.Webpack", "getAllByKeys");
     }
@@ -96,7 +98,7 @@ class BDWebpackApi implements BaseWebpackApi {
     };
 }
 
-class BDDataApi implements BaseDataApi {
+class BDData implements BaseData {
     get save() {
         return createFunctionFromObjectProperty("BdApi.Data", "save");
     }
@@ -110,7 +112,7 @@ class BDDataApi implements BaseDataApi {
     }
 }
 
-class BDPatcherApi implements BasePatcherApi {
+class BDPatcher implements BasePatcher {
     get before() {
         return createFunctionFromObjectProperty("BdApi.Patcher", "before");
     }
@@ -132,10 +134,60 @@ class BDPatcherApi implements BasePatcherApi {
     }
 }
 
+class BdUi implements BaseUi {
+    get alert() {
+        return createFunctionFromObjectProperty("BdApi", "alert");
+    }
+
+    get createTooltip() {
+        return createFunctionFromObjectProperty("BdApi", "createTooltip");
+    }
+
+    get showConfirmationModal() {
+        return createFunctionFromObjectProperty("BdApi", "showConfirmationModal");
+    }
+
+    get showToast() {
+        return createFunctionFromObjectProperty("BdApi", "showToast");
+    }
+
+    get showNotice() {
+        return createFunctionFromObjectProperty("BdApi", "showNotice");
+    }
+
+    get openDialog() {
+        return createFunctionFromObjectProperty("BdApi", "openDialog");
+    }
+}
+
+class BdUtils implements BaseUtils {
+    get findInTree() {
+        return createFunctionFromObjectProperty("BdApi", "findInTree");
+    }
+
+    get extend() {
+        return createFunctionFromObjectProperty("BdApi", "extend");
+    }
+
+    get debounce() {
+        return createFunctionFromObjectProperty("BdApi", "debounce");
+    }
+
+    get escapeHTML() {
+        return createFunctionFromObjectProperty("BdApi", "escapeHTML");
+    }
+
+    get className() {
+        return createFunctionFromObjectProperty("BdApi", "className");
+    }
+}
+
 export default {
-    WebpackApi: new BDWebpackApi(),
-    DataApi: new BDDataApi(),
-    PatcherApi: new BDPatcherApi(),
+    Webpack: new BDWebpack(),
+    Data: new BDData(),
+    Patcher: new BDPatcher(),
+    Ui: new BdUi(),
+    Utils: new BdUtils(),
 
     importsForbidden: true,
 } as IModImplementation;

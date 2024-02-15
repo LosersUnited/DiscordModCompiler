@@ -1,10 +1,12 @@
 import { IModImplementation } from "../api/ModImplementation.js";
 import { createFunctionFromObjectProperty } from "../api/RuntimeGenerators.js";
-import { BaseDataApi } from "../api/modules/Data.js";
-import { BasePatcherApi } from "../api/modules/Patcher.js";
-import { BaseWebpackApi } from "../api/modules/Webpack.js";
+import { BaseData } from "../api/modules/Data.js";
+import { BasePatcher } from "../api/modules/Patcher.js";
+import { BaseUi } from "../api/modules/Ui.js";
+import { BaseUtils } from "../api/modules/Utils.js";
+import { BaseWebpack } from "../api/modules/Webpack.js";
 
-class RPWebpackApi implements BaseWebpackApi {
+class RPWebpack implements BaseWebpack {
     // get getAllByKeys() {
     //     return createFunctionFromObjectProperty("replugged.webpack", "getAllByKeys");
     // }
@@ -64,7 +66,7 @@ class RPWebpackApi implements BaseWebpackApi {
     };
 }
 
-class RPDataApi implements BaseDataApi {
+class RPData implements BaseData {
     // get save() {
 
     // }
@@ -78,7 +80,7 @@ class RPDataApi implements BaseDataApi {
     // }
 }
 
-class RPPatcherApi implements BasePatcherApi {
+class RPPatcher implements BasePatcher {
     // get before() {
 
     // }
@@ -100,9 +102,17 @@ class RPPatcherApi implements BasePatcherApi {
     // }
 }
 
+class RpUi implements BaseUi {
+}
+
+class RpUtils implements BaseUtils {
+
+}
 
 export default {
-    WebpackApi: new RPWebpackApi(),
-    DataApi: new RPDataApi(),
-    PatcherApi: new RPPatcherApi(),
+    Webpack: new RPWebpack(),
+    Data: new RPData(),
+    Patcher: new RPPatcher(),
+    Ui: new RpUi(),
+    Utils: new RpUtils(),
 } as IModImplementation;

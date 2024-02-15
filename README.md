@@ -16,12 +16,11 @@ DiscordModCompiler is a tool that allows developers to compile JavaScript into v
 - [x] Tests
 - [x] Automated tests
 - [ ] Basic plugin development API
-- [ ] Full BetterDiscord support
+- [x] Full BetterDiscord support
     - [x] Webpack
     - [x] Data
     - [x] Patcher
-    - [ ] UI
-    - [ ] Utils
+    - [x] UI
 - [ ] Full RePlugged support
     - [ ] Webpack
     - [ ] Data

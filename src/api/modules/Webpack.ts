@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-export class BaseWebpackApi {
+export class BaseWebpack {
     // Commented out methods are not implemented in Replugged (only for BetterDiscord)
 
     /**
@@ -51,7 +51,7 @@ export class BaseWebpackApi {
      * @param {...string} props Properties to use to filter modules
      * @return {Any}
      */
-    get getByKeys() : (...keys: string[]) => any {
+    get getByKeys(): (...keys: string[]) => any {
         throw new Error("Method not implemented. This is a dummy class.");
     }
 
@@ -91,7 +91,7 @@ export class BaseWebpackApi {
      * @param {boolean} [options.searchExports=false] Whether to execute the filter on webpack exports
      * @return {any}
      */
-    get getModule() : (filter: (match: any) => boolean, options?: any) => any {
+    get getModule(): (filter: (match: any) => boolean, options?: any) => any {
         throw new Error("Method not implemented. This is a dummy class.");
     }
 
@@ -111,7 +111,7 @@ export class BaseWebpackApi {
      * @param {String} name Name of the store to find (usually includes "Store")
      * @return {Any}
      */
-    get getStore() : (storeName: string) => any {
+    get getStore(): (storeName: string) => any {
         throw new Error("Method not implemented. This is a dummy class.");
     }
 
@@ -160,7 +160,7 @@ export class BaseWebpackApi {
         /*
          * @deprecated on betterdiscord, didn't check if it's the same on replugged
          */
-        get byProps() : (...props: string[]) => any {
+        get byProps(): (...props: string[]) => any {
             throw new Error("Method not implemented. This is a dummy class.");
         },
 
@@ -219,4 +219,4 @@ export class BaseWebpackApi {
     };
 }
 
-export const WebpackApi = new BaseWebpackApi();
+export const Webpack = new BaseWebpack();

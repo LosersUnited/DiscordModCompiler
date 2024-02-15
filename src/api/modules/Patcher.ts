@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-export class BasePatcherApi {
+export class BasePatcher {
     // Commented out methods are not implemented in Replugged (only for BetterDiscord)
 
     /**
@@ -64,4 +64,4 @@ export class BasePatcherApi {
     // }
 }
 
-export const PatcherApi = new BasePatcherApi();
+export const Patcher = new BasePatcher();
