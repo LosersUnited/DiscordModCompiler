@@ -1,4 +1,4 @@
-import { RandomName as Webpack } from "discord-mod-compiler";
+import { Webpack } from "discord-mod-compiler";
 
 function start() {
     const getModuleType1 = Webpack.getModule;
