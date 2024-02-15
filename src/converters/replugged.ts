@@ -106,7 +106,9 @@ class RpUi implements BaseUi {
 }
 
 class RpUtils implements BaseUtils {
-
+    get findInTree() {
+        return createFunctionFromObjectProperty("replugged.utils", "findInTree");
+    }
 }
 
 export default {

@@ -9,9 +9,9 @@ export class BaseUtils {
      * @param {Array<string>|null} [options.walkable=null] Array of strings to use as keys that are allowed to be walked on. `null` indicates all keys are walkable.
      * @param {Array<string>} [options.ignore=[]] Array of strings to use as keys to exclude from the search. Most helpful when `walkable = null`.
      */
-    // get findInTree() : (tree: object, searchFilter: () => void, options: {walkable: Array<string>|null, ignore: Array<string>}) => void {
-    //     throw new Error("Method not implemented. This is a dummy class.");
-    // }
+    get findInTree() : (tree: object, searchFilter: () => void, options: {walkable: Array<string>|null, ignore: Array<string>}) => void {
+        throw new Error("Method not implemented. This is a dummy class.");
+    }
 
     /**
      * Deep extends an object with a set of other objects. Objects later in the list
