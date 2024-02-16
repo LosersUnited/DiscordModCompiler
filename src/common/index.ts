@@ -51,7 +51,7 @@ export async function initStores() {
 }
 export function doesImplement(mod: IModImplementation, category: string, method: string) {
     const categoryObj = getKeyValue(mod, category as keyof IModImplementation);
-    return getKeyValue(categoryObj, method as never) == undefined ? false : true;
+    return getKeyValue(categoryObj, method as never) != undefined;
 }
 
 export function require(mod: IModImplementation, category: string, method: string) {
