@@ -40,20 +40,19 @@ const implementationStore = {
         data: null,
         func(...strings) {
             const getModule = require(targetMod, "Webpack", "getModule");
-            if (getModule) {
-                return getModule((module: any) => {
-                    if (!module?.toString || typeof (module?.toString) !== "function") return; // Not stringable
-                    let moduleString = "";
-                    try { moduleString = module?.toString([]); }
-                    catch (err) { moduleString = module?.toString(); }
-                    if (!moduleString) return false; // Could not create string
-                    for (const s of strings) {
-                        if (!moduleString.includes(s)) return false;
-                    }
-                    return true;
-                });
-            }
-            throw new Error("Unimplemented");
+            if (!getModule)
+                throw new Error("Unimplemented");
+            return getModule((module: any) => {
+                if (!module?.toString || typeof (module?.toString) !== "function") return; // Not stringable
+                let moduleString = "";
+                try { moduleString = module?.toString([]); }
+                catch (err) { moduleString = module?.toString(); }
+                if (!moduleString) return false; // Could not create string
+                for (const s of strings) {
+                    if (!moduleString.includes(s)) return false;
+                }
+                return true;
+            });
         },
     }),
 } as { [key: string]: FunctionImplementation };
