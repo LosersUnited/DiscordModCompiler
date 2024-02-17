@@ -86,12 +86,12 @@ export function createJavaScriptFromObject(obj_: any, intend = false) {
     tree.push("}");
     tree_Tabs.push(0);
     // console.log(tree);
-    const final = [...tree];
-    if (intend) {
-        final.length = 0;
-        for (let index = 0; index < tree.length; index++) {
-            final.push(new Array(tree_Tabs[index]).fill("\t").join("") + tree[index]);
-        }
+    if (!intend) {
+        return tree.join("\n");
+    }
+    const final = [];
+    for (let index = 0; index < tree.length; index++) {
+        final.push(new Array(tree_Tabs[index]).fill("\t").join("") + tree[index]);
     }
     return final.join("\n");
 }
