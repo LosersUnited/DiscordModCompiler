@@ -9,7 +9,7 @@ Allows people to compile javascript into any mod, replugged, vencord (maybe) Bet
 -    - [ ] Webpack
 -    - [ ] Data
 -    - [ ] Patcher
-- [ ] Full RePlugged support
+- [ ] Full Replugged support
 -    - [ ] Webpack
 -    - [ ] Data
 -    - [ ] Patcher
