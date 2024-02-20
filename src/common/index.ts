@@ -63,5 +63,5 @@ export function require(mod: IModImplementation, category: string, method: strin
     const foundImplementation = implementationStores[category].implementationStore[method];
     if (foundImplementation == undefined)
         return null; // depends failed
-    return createFunctionFromObjectProperty(`globalThis.implementationStores.${category}`, method);
+    return createFunctionFromObjectProperty(`globalThis.implementationStores.${category}`, method); // this hurts me
 }
