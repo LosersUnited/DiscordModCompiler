@@ -96,8 +96,8 @@ export function createJavaScriptFromObject(obj_: any, intend = false) {
     return final.join("\n");
 }
 
-export type Tree = Record<string, Function | any> | undefined | null;
-export type TreeFilter = string | ((tree: Tree) => boolean | Boolean); // whats the difference :)
+export type Tree = Record<string, () => any | any> | undefined | null;
+export type TreeFilter = string | ((tree: Tree) => boolean); // whats the difference :)
 
 export function findInTree(
     tree: Tree,
@@ -108,9 +108,7 @@ export function findInTree(
 
     if (maxRecursion <= 0 || !tree) return undefined;
 
-    // @ts-ignore
-    // yeah I get all expressions arent callable. that's why IM CHECKING IF IT CAN BE.
-    if ((typeof searchFilter === "string" && tree?.[searchFilter]) || searchFilter(tree))
+    if ((typeof searchFilter === "string" && typeof tree?.[searchFilter] === "function") || (typeof searchFilter === "function" && searchFilter(tree)))
         return tree;
 
     if (!Array.isArray(tree) && typeof tree !== "object")
