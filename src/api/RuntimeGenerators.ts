@@ -28,13 +28,14 @@ export function createFunctionFromObjectProperty(objectName: string, property: s
     return generatedFunction;
 }
 
-import { FunctionImplementation, implementationStores, initStores } from "../common/index.js";
+import { FunctionImplementation, doesImplement, implementationStores, initStores } from "../common/index.js";
 import { createJavaScriptFromObject } from "../utils.js";
 import { parse } from "@babel/parser";
+import { IModImplementation } from "./ModImplementation.js";
 /**
  * this is really wrong, TODO: fix this piece of... garbage
  */
-export async function addCode() {
+export async function addCode(mod: IModImplementation) {
     // let rawCode = "globalThis.implementationStores = {\n"; // TODO: fix, this is awful
     // for (const key in implementationStores) {
     //     if (Object.prototype.hasOwnProperty.call(implementationStores, key)) {
@@ -56,16 +57,17 @@ export async function addCode() {
     } = {};
     for (const key in implementationStores) {
         if (Object.prototype.hasOwnProperty.call(implementationStores, key)) {
-            constructed[key] = {
-                ...implementationStores[key].implementationStore,
-            };
-            // constructed[key] = {};
-            // for (const key2 in implementationStores[key].implementationStore) {
-            //     if (Object.prototype.hasOwnProperty.call(implementationStores[key].implementationStore, key2)) {
-            //         const element = implementationStores[key].implementationStore[key2];
-            //         constructed[key][key2] = getMain(serializer).serialize(element);
-            //     }
-            // }
+            // constructed[key] = {
+            //     ...implementationStores[key].implementationStore,
+            // };
+            constructed[key] = {};
+            for (const key2 in implementationStores[key].implementationStore) {
+                if (Object.prototype.hasOwnProperty.call(implementationStores[key].implementationStore, key2)) {
+                    const element = implementationStores[key].implementationStore[key2];
+                    if (doesImplement(mod, key, key2)) continue;
+                    constructed[key][key2] = element;
+                }
+            }
         }
     }
     // const rawCode = "globalThis.implementationStores = {\n" + getMain(serializer).serialize(constructed) + "\n}";

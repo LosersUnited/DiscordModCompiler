@@ -1,5 +1,5 @@
 import { FunctionImplementation, require } from "./index.js";
-import { IModImplementation } from "../api/ModImplementation";
+import { IModImplementation } from "../api/ModImplementation.js";
 
 // const reservedData = {} as { [key: string]: any };
 

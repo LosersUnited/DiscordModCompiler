@@ -146,6 +146,6 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
             }
         }
     }
-    parsedBodyWithoutOurImports.unshift(...await addCode());
+    parsedBodyWithoutOurImports.unshift(...await addCode(targetedDiscordModApiLibrary.default));
     return parsedBodyWithoutOurImports;
 }
