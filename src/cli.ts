@@ -54,5 +54,7 @@ filler.then((x: { default: IModImplementation }) => {
         },
     } as File;
     const generate = typeof generate_ == "function" ? generate_ : (generate_ as { default: typeof generate_ }).default;
-    console.log("generated code: ", generate(outMod).code);
+    const final = generate(outMod).code;
+    console.log("generated code: ", final);
+    writeFileSync(process.argv[4], final);
 });
