@@ -1,0 +1,21 @@
+{
+  "name": "replugged-sample",
+  "version": "1.0.0",
+  "description": "",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "scripts": {
+    "build": "replugged build plugin",
+    "watch": "replugged build plugin --watch",
+    "bundle": "replugged bundle plugin",
+    "release": "replugged release"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "replugged": "^4.7.4"
+  }
+}

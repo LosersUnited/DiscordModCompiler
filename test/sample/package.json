@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "pnpm exec discord-mod-compiler ./index.js BetterDiscord",
-    "test2": "pnpm exec discord-mod-compiler ./index.js replugged"
+    "test": "pnpm exec discord-mod-compiler ./index.js BetterDiscord ./betterdiscord/index.js",
+    "test2": "pnpm exec discord-mod-compiler ./index.js replugged ./replugged/index.js"
   },
   "type": "module",
   "keywords": [],
