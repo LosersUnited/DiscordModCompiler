@@ -1,0 +1,16 @@
+{
+  "name": "betterdiscord-sample",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --progress --color"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^5.90.3",
+    "webpack-cli": "^5.1.4"
+  }
+}
