@@ -12,7 +12,7 @@ for (const file of tsFiles) {
   console.log(`Testing ${file}`);
   
   try {
-    execSync(`npm run cli-nobuild ./test/sample/index.js ${file}`, { stdio: 'inherit' });
+    execSync(`npm run cli-nobuild ./test/sample/index.js ${file} ./test/sample/${file}/index.js`, { stdio: 'inherit' });
   } catch (error) {
     console.error(`Error in ${file}`);
     process.exit(1);

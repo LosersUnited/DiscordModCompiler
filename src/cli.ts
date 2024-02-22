@@ -1,6 +1,6 @@
 import { parse } from "@babel/parser";
 import { default as generate_ } from "@babel/generator";
-import { readFileSync, readdirSync } from "fs";
+import { readFileSync, readdirSync, writeFileSync } from "fs";
 import * as url from 'url';
 import converter from "./converter.js";
 import { File } from "@babel/types";
@@ -9,8 +9,8 @@ import { transformSync } from "@babel/core";
 import { IModImplementation } from "./api/ModImplementation.js";
 // import { addCode } from "./api/RuntimeGenerators.js";
 
-if (process.argv.length != 4) {
-    console.error(`Usage:\n\t${myPackageName} <input file> <target client mod>\nExample:\n\t${myPackageName} ./index.js BetterDiscord`);
+if (process.argv.length != 5) {
+    console.error(`Usage:\n\t${myPackageName} <input file> <target client mod> <output file>\nExample:\n\t${myPackageName} ./index.js BetterDiscord ./dist/index.js`);
     process.exit(1);
 }
 
