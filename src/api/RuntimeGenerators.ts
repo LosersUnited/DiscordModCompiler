@@ -28,7 +28,7 @@ export function createFunctionFromObjectProperty(objectName: string, property: s
     return generatedFunction;
 }
 
-import { FunctionImplementation, doesImplement, implementationStores, initStores } from "../common/index.js";
+import { FunctionImplementation, __requireInternal, doesImplement, implementationStores, initStores } from "../common/index.js";
 import { createJavaScriptFromObject } from "../utils.js";
 import { parse } from "@babel/parser";
 import { IModImplementation } from "./ModImplementation.js";
@@ -65,13 +65,48 @@ export async function addCode(mod: IModImplementation) {
                 if (Object.prototype.hasOwnProperty.call(implementationStores[key].implementationStore, key2)) {
                     const element = implementationStores[key].implementationStore[key2];
                     if (doesImplement(mod, key, key2)) continue;
+                    if (element.func.toString().includes(__requireInternal.name)) {
+                        // const regex = new RegExp(__requireInternal.name + "\\(([^)]+)\\)", 'g');
+                        // const match = element.func.toString().match(regex);
+                        // if (!match)
+                        //     continue;
+                        // const args = match[1].split(',').map(value => value.trim());
+                        // args.shift();
+                        // console.log(args);
+                        // // const constructed2 = element.func.toString().replace(new RegExp(__requireInternal.name + "\\([^,]+,\\s*", 'g'), "globalThis.implementationStores_require(") + "}.func";
+                        // // element.func = new Function("return {" + constructed2)();
+                        // // element.func = (mod as { [key: string]: any })[args[0]][args[1]];
+                        const regexPattern = new RegExp(`${__requireInternal.name}\\(([^)]+)\\)`, "g");
+                        let match;
+                        while ((match = regexPattern.exec(element.func.toString())) !== null) {
+                            const argsStr = match[1];
+                            const args = argsStr.split(',').map(x => x.trim()).map(x => x.startsWith("\"") && x.endsWith("\"") ? x.slice(1, -1) : x);
+                            args.shift();
+
+                            // const replacement = "globalThis.implementationStores_require(" + someValues.join(",") + ")";
+                            // const result = element.func.toString().replace(match[0], replacement);
+                            try {
+                                const findResult = (mod as { [key: string]: any })[args[0]][args[1]];
+                                // element.func = findResult;
+                                element.func = new Function("return {" + element.func.toString().replace(match[0], `${findResult.object}.${findResult.property}`) + "}.func")();
+                            }
+                            catch (error) {
+                                console.error(error);
+                                const replacement = `globalThis.implementationStores_require(globalThis.implementationStores["${args[0]}"]["${args[1]}"])`;
+                                element.func = new Function("return {" + element.func.toString().replace(match[0], replacement) + "}.func")();
+                            }
+                        }
+                    }
                     constructed[key][key2] = element;
                 }
             }
         }
     }
     // const rawCode = "globalThis.implementationStores = {\n" + getMain(serializer).serialize(constructed) + "\n}";
-    const rawCode = "globalThis.implementationStores = (" + createJavaScriptFromObject(constructed, true) + ")";
+    const req = (target: any) => new Function("target", "return {" + target.func + "}.func;")(target);
+    const rawCode =
+        `globalThis.implementationStores = (${createJavaScriptFromObject(constructed, true)});
+        globalThis.implementationStores_require = ${req.toString()};`; // TODO: Remove hardcoded paths
     // console.log(rawCode);
     const rawCodeAst = parse(rawCode);
     return rawCodeAst.program.body;

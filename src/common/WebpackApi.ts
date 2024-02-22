@@ -1,4 +1,4 @@
-import { FunctionImplementation, require } from "./index.js";
+import { FunctionImplementation, __requireInternal } from "./index.js";
 import { IModImplementation } from "../api/ModImplementation.js";
 
 // const reservedData = {} as { [key: string]: any };
@@ -39,7 +39,8 @@ const implementationStore = {
         supplies: "getByStrings",
         data: null,
         func(...strings) {
-            const getModule = require(targetMod, "Webpack", "getModule");
+            __requireInternal(targetMod, "WebpackApi", "test")!();
+            const getModule = __requireInternal(targetMod, "WebpackApi", "getModule");
             if (!getModule)
                 throw new Error("Unimplemented");
             return getModule((module: any) => {
@@ -53,6 +54,16 @@ const implementationStore = {
                 }
                 return true;
             });
+        },
+    }),
+    test: new FunctionImplementation({
+        data: null,
+        depends: ["getByStrings"],
+        supplies: "test",
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        func(...args: any[]) {
+            debugger;
+            return "among us";
         },
     }),
 } as { [key: string]: FunctionImplementation };

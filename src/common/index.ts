@@ -54,7 +54,7 @@ export function doesImplement(mod: IModImplementation, category: string, method:
     return getKeyValue(categoryObj, method as never) != undefined;
 }
 
-export function require(mod: IModImplementation, category: string, method: string) {
+export function __requireInternal(mod: IModImplementation, category: string, method: string) {
     if (doesImplement(mod, category, method)) {
         const categoryObj = getKeyValue(mod, category as keyof IModImplementation);
         return getKeyValue(categoryObj, method as never);
@@ -63,5 +63,5 @@ export function require(mod: IModImplementation, category: string, method: strin
     const foundImplementation = implementationStores[category].implementationStore[method];
     if (foundImplementation == undefined)
         return null; // depends failed
-    return createFunctionFromObjectProperty(`globalThis.implementationStores.${category}`, method); // this hurts me
+    return createFunctionFromObjectProperty(`globalThis.implementationStores.${category}`, method); // TODO: Remove hardcoded paths
 }
