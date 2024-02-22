@@ -63,7 +63,7 @@ const implementationStore = {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         func(...args: any[]) {
             debugger;
-            return "among us";
+            return "the test worked";
         },
     }),
 } as { [key: string]: FunctionImplementation };
