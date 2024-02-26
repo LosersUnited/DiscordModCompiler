@@ -1,13 +1,13 @@
-import { WebpackApi } from "discord-mod-compiler";
+import { Webpack } from "discord-mod-compiler";
 
 function start() {
-    const getModuleType1 = WebpackApi.getModule;
+    const getModuleType1 = Webpack.getModule;
     const someModuleType1 = getModuleType1(x => x._sendMessage);
 
-    const { getModule: getModuleType2 } = WebpackApi;
+    const { getModule: getModuleType2 } = Webpack;
     const someModuleType2 = getModuleType2(x => x._sendMessage);
-
-    const someModuleType3 = WebpackApi.getModule(x => x._sendMessage);
+  
+    const someModuleType3 = Webpack.getModule(x => x._sendMessage);
 
     const modules = [
         getModuleType1,

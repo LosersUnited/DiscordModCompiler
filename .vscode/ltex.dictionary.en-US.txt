@@ -1,0 +1,10 @@
+BetterDiscord
+RePlugged
+Utils
+Patcher
+transpiler
+DiscordModCompiler
+UserScript
+util
+Vencord
+transpiles
