@@ -147,5 +147,7 @@ export default function (ast: ParseResult<File>, targetedDiscordModApiLibrary: {
             }
         }
     }
-    return parsedBodyWithoutOurImports;
+    if ((targetedDiscordModApiLibrary as { default: IModImplementation } & { convertFormat: (ast_: Statement[]) => Statement[] }).convertFormat == undefined)
+        return parsedBodyWithoutOurImports;
+    return (targetedDiscordModApiLibrary as { default: IModImplementation } & { convertFormat: (ast_: Statement[]) => Statement[] }).convertFormat(parsedBodyWithoutOurImports);
 }
