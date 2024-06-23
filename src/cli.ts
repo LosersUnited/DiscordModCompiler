@@ -57,5 +57,7 @@ filler.then(async (x: { default: IModImplementation }) => {
         },
     } as File;
     const generate = getMain(generate_);
-    console.log("generated code: ", generate(outMod).code);
+    const final = generate(outMod).code;
+    console.log("generated code: ", final);
+    writeFileSync(process.argv[4], final);
 });
