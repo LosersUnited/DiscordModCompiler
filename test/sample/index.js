@@ -27,9 +27,3 @@ export default class CrossCompiledSample {
     stop() {
     }
 }
-
-function stop() {
-
-}
-
-export { start, stop };
