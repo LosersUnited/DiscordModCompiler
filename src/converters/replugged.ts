@@ -11,25 +11,18 @@ class RPWebpackApi implements IBaseWebpackApi {
 }
 
 export function convertFormat(ast: Statement[]) {
-    // debugger;
-    // need to add this:
-    /*
-    const instance = new CrossCompiledSample();
-    export const start = instance.start.bind(instance);
-    export const stop = instance.stop.bind(instance);
-    */
     let targetClassName = undefined;
-    for (let index2 = 0; index2 < ast.length; index2++) {
-        if (ast[index2].type == "ExportDefaultDeclaration") {
-            const currentExportDefaultDeclaration = ast[index2] as ExportDefaultDeclaration;
-            if (currentExportDefaultDeclaration.declaration.type == "ClassDeclaration") {
-                const currentExportedClass = currentExportDefaultDeclaration.declaration as ClassDeclaration;
-                if (currentExportedClass.body.body.find(x => ((x as ClassMethod).key as Identifier)?.name == "start")) {
-                    targetClassName = currentExportedClass.id?.name;
-                    break;
-                }
-            }
-        }
+    for (const astNode of ast) {
+        if (astNode.type !== "ExportDefaultDeclaration") continue;
+        const exportDeclaration = astNode as ExportDefaultDeclaration;
+        if (exportDeclaration.declaration.type !== "ClassDeclaration") continue;
+        const exportedClass = exportDeclaration.declaration as ClassDeclaration;
+        const hasStartMethod = exportedClass.body.body.some(
+            (method) => ((method as ClassMethod).key as Identifier)?.name === "start",
+        );
+        if (!hasStartMethod) continue;
+        targetClassName = exportedClass.id?.name;
+        break;
     }
     if (targetClassName != undefined) {
         // const instanceVar = variableDeclaration("const", [
