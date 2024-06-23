@@ -24,7 +24,7 @@ export function convertFormat(ast: Statement[]) {
         targetClassName = exportedClass.id?.name;
         break;
     }
-    if (targetClassName != undefined) {
+    if (targetClassName !== undefined) {
         // const instanceVar = variableDeclaration("const", [
         //     variableDeclarator(identifier("instance"), newExpression(identifier(targetClassName), [])),
         // ]);
