@@ -110,6 +110,9 @@ export default function (ast: ParseResult<File>, targetedDiscordModApiLibrary: {
         if (element.source.value == myPackageName) { // checking if it's the same module as we are
             for (let index2 = 0; index2 < element.specifiers.length; index2++) {
                 const spec = element.specifiers[index2] as ImportSpecifier;
+                if (getKeyValue(targetedDiscordModApiLibrary.default, (spec.imported as Identifier).name as never) === undefined) {
+                    throw new ReferenceError(`Module 'discord-mod-compiler' has no exported member '${(spec.imported as Identifier).name}'.`);
+                }
                 importsToBake.push(spec.local.name); // we'll later watch those for replacement
                 importsToRemove.push(index);
             }
