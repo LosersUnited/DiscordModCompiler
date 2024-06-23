@@ -38,6 +38,7 @@ import { createFunctionFromObjectProperty } from "../api/RuntimeGenerators.js";
 import { readdirSync } from "fs";
 import * as url from 'url';
 import * as path from 'path';
+import { IMPLEMENTATION_STORES_PATH_SOURCE, IMPLEMENTATION_STORES_PATH_VAR_NAME } from "../constants.js";
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 export const implementationStores = {
@@ -77,5 +78,5 @@ export function __requireInternal(mod: IModImplementation, category: string, met
     const foundImplementation = implementationStores[category].implementationStore[method];
     if (foundImplementation == undefined)
         return null; // depends failed
-    return createFunctionFromObjectProperty(`globalThis.implementationStores.${category}`, method); // TODO: Remove hardcoded paths
+    return createFunctionFromObjectProperty(`${IMPLEMENTATION_STORES_PATH_SOURCE}.${IMPLEMENTATION_STORES_PATH_VAR_NAME}.${category}`, method);
 }

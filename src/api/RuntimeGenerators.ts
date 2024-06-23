@@ -37,6 +37,7 @@ import { FunctionImplementation, __requireInternal, doesImplement, implementatio
 import { createJavaScriptFromObject, getKeyValue } from "../utils.js";
 import { parse } from "@babel/parser";
 import { IModImplementation } from "./ModImplementation.js";
+import { IMPLEMENTATION_STORES_PATH_REQ, IMPLEMENTATION_STORES_PATH_SOURCE, IMPLEMENTATION_STORES_PATH_VAR_NAME } from "../constants.js";
 /**
  * this is really wrong, TODO: fix this piece of... garbage
  */
@@ -108,7 +109,7 @@ export async function addCode(mod: IModImplementation) {
                             catch (error) {
                                 // console.error(mod, args, error);
                                 console.error((mod as { [key: string]: any })[args[0]], (mod as { [key: string]: any })[args[0]][args[1]]);
-                                const replacement = `globalThis.implementationStores_require(globalThis.implementationStores["${args[0]}"]["${args[1]}"])`;
+                                const replacement = `${IMPLEMENTATION_STORES_PATH_SOURCE}.${IMPLEMENTATION_STORES_PATH_REQ}(${IMPLEMENTATION_STORES_PATH_SOURCE}.${IMPLEMENTATION_STORES_PATH_VAR_NAME}["${args[0]}"]["${args[1]}"])`;
                                 element.func = new Function("return {" + element.func.toString().replace(match[0], replacement) + "}.func")();
                             }
                         }
@@ -121,8 +122,8 @@ export async function addCode(mod: IModImplementation) {
     // const rawCode = "globalThis.implementationStores = {\n" + getMain(serializer).serialize(constructed) + "\n}";
     const req = (target: any) => new Function("target", "return {" + target.func + "}.func;")(target);
     const rawCode =
-        `globalThis.implementationStores = (${createJavaScriptFromObject(constructed, true)});
-        globalThis.implementationStores_require = ${req.toString()};`; // TODO: Remove hardcoded paths
+        `${IMPLEMENTATION_STORES_PATH_SOURCE}.${IMPLEMENTATION_STORES_PATH_VAR_NAME} = (${createJavaScriptFromObject(constructed, true)});
+        ${IMPLEMENTATION_STORES_PATH_SOURCE}.${IMPLEMENTATION_STORES_PATH_REQ} = ${req.toString()};`;
     // console.log(rawCode);
     const rawCodeAst = parse(rawCode);
     return rawCodeAst.program.body;

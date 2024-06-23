@@ -4,6 +4,7 @@ import { File, Identifier, ImportDeclaration, ImportSpecifier, MemberExpression,
 import { NonFunctionType, getKeyValue, myPackageName } from "./utils.js";
 import { IModImplementation } from "./api/ModImplementation";
 import { addCode } from "./api/RuntimeGenerators.js";
+import { IMPLEMENTATION_STORES_PATH_REQ, IMPLEMENTATION_STORES_PATH_SOURCE, IMPLEMENTATION_STORES_PATH_VAR_NAME } from "./constants.js";
 
 function removeASTLocation(ast: Statement[] | Statement) {
     if (Array.isArray(ast)) {
@@ -151,9 +152,9 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
                         delete trueObj[prop];
                     }
                     // const newCallExpr = callExpression(memberExpression(identifier("globalThis"), identifier("implementationStores_require")), [stringLiteral(`globalThis.implementationStores["${originalObj}"]["${originalProp}"]`)]);
-                    const newCallExpr = callExpression(memberExpression(identifier("globalThis"), identifier("implementationStores_require")), [
+                    const newCallExpr = callExpression(memberExpression(identifier(IMPLEMENTATION_STORES_PATH_SOURCE), identifier(IMPLEMENTATION_STORES_PATH_REQ)), [
                         // stringLiteral(`globalThis.implementationStores["${originalObj}"]["${originalProp}"]`),
-                        memberExpression(memberExpression(memberExpression(identifier("globalThis"), identifier("implementationStores")), identifier(originalObj)), identifier(originalProp)),
+                        memberExpression(memberExpression(memberExpression(identifier(IMPLEMENTATION_STORES_PATH_SOURCE), identifier(IMPLEMENTATION_STORES_PATH_VAR_NAME)), identifier(originalObj)), identifier(originalProp)),
                     ]);
                     Object.assign(trueObj, newCallExpr);
                     continue;
@@ -166,8 +167,8 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
                         // @ts-expect-error well
                         delete trueObj[prop];
                     }
-                    const newCallExpr = callExpression(memberExpression(identifier("globalThis"), identifier("implementationStores_require")), [
-                        memberExpression(memberExpression(memberExpression(identifier("globalThis"), identifier("implementationStores")), identifier(originalObj)), identifier(replacementObject.wrapperName)),
+                    const newCallExpr = callExpression(memberExpression(identifier(IMPLEMENTATION_STORES_PATH_SOURCE), identifier(IMPLEMENTATION_STORES_PATH_REQ)), [
+                        memberExpression(memberExpression(memberExpression(identifier(IMPLEMENTATION_STORES_PATH_SOURCE), identifier(IMPLEMENTATION_STORES_PATH_VAR_NAME)), identifier(originalObj)), identifier(replacementObject.wrapperName)),
                     ]);
                     Object.assign(trueObj, newCallExpr);
                     continue;
