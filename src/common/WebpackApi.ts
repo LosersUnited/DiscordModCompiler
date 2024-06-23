@@ -34,6 +34,16 @@ const implementationStore = {
             return Object.values(this.data.req).find(filter)?.exports;
         },
     }),
+    getModuleRawToExportedWrapper: new FunctionImplementation({
+        depends: [],
+        supplies: "getModule",
+        data: null,
+        isWrapper: true,
+        func(filter: (mod: any) => boolean) {
+            const originalGetModule = __requireInternal(targetMod, "WebpackApi", "getModule", true);
+            return originalGetModule!((x: { exports: any; }) => filter(x.exports));
+        },
+    }),
     getByStrings: new FunctionImplementation({
         depends: ["getModule"],
         supplies: "getByStrings",
