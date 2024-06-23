@@ -27,9 +27,14 @@ export function createFunctionFromObjectProperty(objectName: string, property: s
     });
     return generatedFunction;
 }
+export function createFunctionWithWrapperNeeded(objectName: string, property: string, wrapperName: string) {
+    const result = createFunctionFromObjectProperty(objectName, property);
+    Object.defineProperty(result, "wrapperName", { value: wrapperName });
+    return result;
+}
 
 import { FunctionImplementation, __requireInternal, doesImplement, implementationStores, initStores } from "../common/index.js";
-import { createJavaScriptFromObject } from "../utils.js";
+import { createJavaScriptFromObject, getKeyValue } from "../utils.js";
 import { parse } from "@babel/parser";
 import { IModImplementation } from "./ModImplementation.js";
 /**
@@ -65,6 +70,11 @@ export async function addCode(mod: IModImplementation) {
                 if (Object.prototype.hasOwnProperty.call(implementationStores[key].implementationStore, key2)) {
                     const element = implementationStores[key].implementationStore[key2];
                     if (doesImplement(mod, key, key2)) continue;
+                    if (element.isWrapper === true) {
+                        const categoryObj = getKeyValue(mod, key as keyof IModImplementation);
+                        const unWrapped = getKeyValue(categoryObj, element.supplies as never) as any;
+                        if (unWrapped.wrapperName != key2) continue;
+                    }
                     if (element.func.toString().includes(__requireInternal.name)) {
                         // const regex = new RegExp(__requireInternal.name + "\\(([^)]+)\\)", 'g');
                         // const match = element.func.toString().match(regex);
@@ -87,11 +97,17 @@ export async function addCode(mod: IModImplementation) {
                             // const result = element.func.toString().replace(match[0], replacement);
                             try {
                                 const findResult = (mod as { [key: string]: any })[args[0]][args[1]];
+                                if (findResult.wrapperName && args[2] != "true") {
+                                    args[1] = findResult.wrapperName;
+                                    throw new Error();
+                                }
+                                // const findResult = __requireInternal(mod, args[0], args[1]) as unknown as any;
                                 // element.func = findResult;
                                 element.func = new Function("return {" + element.func.toString().replace(match[0], `${findResult.object}.${findResult.property}`) + "}.func")();
                             }
                             catch (error) {
-                                console.error(error);
+                                // console.error(mod, args, error);
+                                console.error((mod as { [key: string]: any })[args[0]], (mod as { [key: string]: any })[args[0]][args[1]]);
                                 const replacement = `globalThis.implementationStores_require(globalThis.implementationStores["${args[0]}"]["${args[1]}"])`;
                                 element.func = new Function("return {" + element.func.toString().replace(match[0], replacement) + "}.func")();
                             }

@@ -6,12 +6,14 @@ export interface IFunctionImplementation {
     depends: string[],
     data: any,
     func: (...args: any[]) => any,
+    isWrapper?: boolean,
 }
 class FunctionImplementation implements IFunctionImplementation {
     supplies: string;
     depends: string[];
     data: any;
     func: (...args: any[]) => any;
+    isWrapper?: boolean | undefined;
     // constructor(supplies: string, depends: string[], data: any, func: (...args: any[]) => any) {
     //     this.supplies = supplies;
     //     this.depends = depends;
@@ -19,11 +21,13 @@ class FunctionImplementation implements IFunctionImplementation {
     //     this.func = func;
     // }
     constructor(options: IFunctionImplementation) {
-        const { supplies, depends, data, func } = options;
+        const { supplies, depends, data, func, isWrapper } = options;
         this.supplies = supplies!;
         this.depends = depends!;
         this.data = data!;
         this.func = func!;
+        // this.isWrapper = isWrapper === true;
+        Object.defineProperty(this, "isWrapper", { value: isWrapper, enumerable: isWrapper === true });
     }
 }
 export {
@@ -54,12 +58,22 @@ export function doesImplement(mod: IModImplementation, category: string, method:
     return getKeyValue(categoryObj, method as never) != undefined;
 }
 
-export function __requireInternal(mod: IModImplementation, category: string, method: string) {
+export function __requireInternal(mod: IModImplementation, category: string, method: string, ignoreWrappers: boolean = false) {
     if (doesImplement(mod, category, method)) {
         const categoryObj = getKeyValue(mod, category as keyof IModImplementation);
-        return getKeyValue(categoryObj, method as never);
+        const result = getKeyValue(categoryObj, method as never);
+        if (ignoreWrappers)
+            return result;
+        else {
+            if (result["wrapperName"]) {
+                method = result["wrapperName"];
+            }
+            else
+                return result;
+        }
     }
-    implementationStores[category].targetMod = mod;
+    if (implementationStores[category].targetMod !== undefined)
+        implementationStores[category].targetMod = mod;
     const foundImplementation = implementationStores[category].implementationStore[method];
     if (foundImplementation == undefined)
         return null; // depends failed

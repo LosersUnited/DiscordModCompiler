@@ -117,7 +117,7 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
     const trueImportsToRemove =
         importStatements.filter((_, index) => importsToRemove.includes(index));
     const parsedBodyWithoutOurImports = parsedBody.filter((item, index) => !trueImportsToRemove.includes(parsedBody[index]));
-    parsedBodyWithoutOurImports.unshift(...await addCode(targetedDiscordModApiLibrary.default));
+    // parsedBodyWithoutOurImports.unshift(...await addCode(targetedDiscordModApiLibrary.default));
     for (let index = 0; index < parsedBodyWithoutOurImports.length; index++) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const element = parsedBodyWithoutOurImports[index];
@@ -158,7 +158,20 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
                     Object.assign(trueObj, newCallExpr);
                     continue;
                 }
-                const replacementObject = getKeyValue(targetClass, (trueObj.property as Identifier).name as keyof typeof targetClass) as { object: string, property: string };
+                const replacementObject = getKeyValue(targetClass, (trueObj.property as Identifier).name as keyof typeof targetClass) as { object: string, property: string, wrapperName?: string };
+                // const replacementObject = __requireInternal(targetedDiscordModApiLibrary.default, (trueObj.object as Identifier).name, (trueObj.property as Identifier).name)! as unknown as any;
+                if (replacementObject.wrapperName) {
+                    const originalObj = (trueObj.object as Identifier).name;
+                    for (const prop of Object.getOwnPropertyNames(trueObj)) {
+                        // @ts-expect-error well
+                        delete trueObj[prop];
+                    }
+                    const newCallExpr = callExpression(memberExpression(identifier("globalThis"), identifier("implementationStores_require")), [
+                        memberExpression(memberExpression(memberExpression(identifier("globalThis"), identifier("implementationStores")), identifier(originalObj)), identifier(replacementObject.wrapperName)),
+                    ]);
+                    Object.assign(trueObj, newCallExpr);
+                    continue;
+                }
                 (trueObj.object as Identifier).name = replacementObject.object;
                 (trueObj.property as Identifier).name = replacementObject.property;
             }
