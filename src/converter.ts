@@ -98,7 +98,7 @@ const getKeyValue = <T, K extends keyof T>(obj: T, key: K): T[K] => obj[key];
 export default function (ast: ParseResult<File>, targetedDiscordModApiLibrary: { default: IModImplementation }): Statement[] {
     const parsedBody = ast.program.body;
     const importStatements = parsedBody.filter(x => x.type == "ImportDeclaration");
-    const importsToBake = [];
+    const importAliasMap = [] as { internalName: string, codeName: string }[];
     removeASTLocation(importStatements);
     const importsToRemove: number[] = [];
     for (let index = 0; index < importStatements.length; index++) {
@@ -113,7 +113,7 @@ export default function (ast: ParseResult<File>, targetedDiscordModApiLibrary: {
                 if (getKeyValue(targetedDiscordModApiLibrary.default, (spec.imported as Identifier).name as never) === undefined) {
                     throw new ReferenceError(`Module 'discord-mod-compiler' has no exported member '${(spec.imported as Identifier).name}'.`);
                 }
-                importsToBake.push(spec.local.name); // we'll later watch those for replacement
+                importAliasMap.push({ codeName: spec.local.name, internalName: (spec.imported as Identifier).name }); // we'll later watch those for replacement
                 importsToRemove.push(index);
             }
         }
@@ -135,9 +135,9 @@ export default function (ast: ParseResult<File>, targetedDiscordModApiLibrary: {
             const element2 = paths[index2];
             const trueObj = deepFind<MemberExpression>(element, element2);
             console.log(trueObj);
-            if (trueObj != undefined && importsToBake.includes((trueObj.object as Identifier).name)) {
+            if (trueObj != undefined && importAliasMap.find(x => x.codeName == (trueObj.object as Identifier).name) !== undefined) {
                 removeASTLocation(trueObj as unknown as Statement);
-                const propDesc = Object.getOwnPropertyDescriptor(targetedDiscordModApiLibrary.default, (trueObj.object as Identifier).name as keyof IModImplementation);
+                const propDesc = Object.getOwnPropertyDescriptor(targetedDiscordModApiLibrary.default, importAliasMap.find(x => x.codeName == (trueObj.object as Identifier).name)?.internalName as keyof IModImplementation);
                 if (!propDesc)
                     continue;
                 // const targetClass = targetedDiscordModApiLibrary.default[(trueObj.object as Identifier).name];
