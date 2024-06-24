@@ -13,7 +13,7 @@ export type NonFunctionType<T> = T extends Function ? never : T;
 export type OnlyFunctionType<T> = T extends Function ? T : never;
 export const getKeyValue = <T, K extends keyof T>(obj: T, key: K): T[K] => obj[key];
 // eslint-disable-next-line @typescript-eslint/ban-types
-export const getMain = <T>(t: T | { default: T }) => (typeof t == "function" ? t : (t as { default: T }).default);
+export const getMain = <T>(t: T | { default: T }) => (typeof t === "function" ? t : (t as { default: T }).default);
 export function escapeJsonString(str: string) {
     return str.replace(/["\\]/g, '\\$&')
         .replace(/\n/g, '\\n')
