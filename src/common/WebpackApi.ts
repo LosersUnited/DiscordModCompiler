@@ -41,7 +41,7 @@ const implementationStore = {
         isWrapper: true,
         func(filter: (mod: any) => boolean) {
             const originalGetModule = __requireInternal(targetMod, "WebpackApi", "getModule", true);
-            return originalGetModule!((x: { exports: any; }) => filter(x.exports));
+            return originalGetModule!((x: { exports: any; }) => Object.values(x?.exports || {})?.some(filter));
         },
     }),
     getByStrings: new FunctionImplementation({
