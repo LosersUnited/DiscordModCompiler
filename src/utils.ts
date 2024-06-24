@@ -96,8 +96,8 @@ export function createJavaScriptFromObject(obj_: any, intend = false) {
     return final.join("\n");
 }
 
-export type Tree = Record<string, () => any | any> | undefined | null;
-export type TreeFilter = string | ((tree: Tree) => boolean); // whats the difference :)
+export type Tree = Record<string, unknown> | null;
+type TreeFilter = string | ((tree: Tree) => boolean);
 
 export function findInTree(
     tree: Tree,
