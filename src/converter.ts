@@ -111,7 +111,7 @@ export default function (ast: ParseResult<File>, targetedDiscordModApiLibrary: {
             for (let index2 = 0; index2 < element.specifiers.length; index2++) {
                 const spec = element.specifiers[index2] as ImportSpecifier;
                 if (getKeyValue(targetedDiscordModApiLibrary.default, (spec.imported as Identifier).name as never) === undefined) {
-                    throw new ReferenceError(`Module 'discord-mod-compiler' has no exported member '${(spec.imported as Identifier).name}'.`);
+                    throw new ReferenceError(`Module '${myPackageName}' has no exported member '${(spec.imported as Identifier).name}'.`);
                 }
                 importAliasMap.push({ codeName: spec.local.name, internalName: (spec.imported as Identifier).name }); // we'll later watch those for replacement
                 importsToRemove.push(index);
