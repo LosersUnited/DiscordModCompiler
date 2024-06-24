@@ -24,7 +24,7 @@ class FunctionImplementation implements IFunctionImplementation {
         const { supplies, depends, data, func, isWrapper } = options;
         this.supplies = supplies!;
         this.depends = depends!;
-        this.data = data!;
+        Object.defineProperty(this, "data", { value: data, enumerable: data !== null });
         this.func = func!;
         // this.isWrapper = isWrapper === true;
         Object.defineProperty(this, "isWrapper", { value: isWrapper, enumerable: isWrapper === true });
