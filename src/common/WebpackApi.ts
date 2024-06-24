@@ -49,7 +49,7 @@ const implementationStore = {
         supplies: "getByStrings",
         data: null,
         func(...strings) {
-            __requireInternal(targetMod, "WebpackApi", "test")!();
+            /* __requireInternal(targetMod, "WebpackApi", "test")!(); */
             const getModule = __requireInternal(targetMod, "WebpackApi", "getModule");
             if (!getModule)
                 throw new Error("Unimplemented");
