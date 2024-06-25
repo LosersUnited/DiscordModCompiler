@@ -97,7 +97,7 @@ function deepFind<K>(obj: any, path: string): K | undefined {
 
 export default async function (ast: ParseResult<File>, targetedDiscordModApiLibrary: { default: IModImplementation }): Promise<Statement[]> {
     const parsedBody = ast.program.body;
-    const importStatements = parsedBody.filter(x => x.type == "ImportDeclaration");
+    const importStatements = parsedBody.filter(x => x.type == "ImportDeclaration") as Statement[];
     const importAliasMap = [] as { internalName: string, codeName: string }[];
     removeASTLocation(importStatements);
     const importsToRemove: number[] = [];
