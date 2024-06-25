@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ParseResult } from "@babel/parser";
-import { File, Identifier, ImportDeclaration, ImportSpecifier, MemberExpression, Statement } from "@babel/types";
-import { NonFunctionType, myPackageName } from "./utils.js";
+import { File, Identifier, ImportDeclaration, ImportSpecifier, MemberExpression, Statement, callExpression, identifier, memberExpression, stringLiteral } from "@babel/types";
+import { NonFunctionType, getKeyValue, myPackageName } from "./utils.js";
 import { IModImplementation } from "./api/ModImplementation";
+import { addCode } from "./api/RuntimeGenerators.js";
+import { IMPLEMENTATION_STORES_PATH_REQ, IMPLEMENTATION_STORES_PATH_SOURCE, IMPLEMENTATION_STORES_PATH_VAR_NAME } from "./constants.js";
 
 function removeASTLocation(ast: Statement[] | Statement) {
     if (Array.isArray(ast)) {
@@ -93,9 +95,7 @@ function deepFind<K>(obj: any, path: string): K | undefined {
     return current;
 }
 
-const getKeyValue = <T, K extends keyof T>(obj: T, key: K): T[K] => obj[key];
-
-export default function (ast: ParseResult<File>, targetedDiscordModApiLibrary: { default: IModImplementation }): Statement[] {
+export default async function (ast: ParseResult<File>, targetedDiscordModApiLibrary: { default: IModImplementation }): Promise<Statement[]> {
     const parsedBody = ast.program.body;
     const importStatements = parsedBody.filter(x => x.type == "ImportDeclaration");
     const importAliasMap = [] as { internalName: string, codeName: string }[];
@@ -121,6 +121,7 @@ export default function (ast: ParseResult<File>, targetedDiscordModApiLibrary: {
     const trueImportsToRemove =
         importStatements.filter((_, index) => importsToRemove.includes(index));
     const parsedBodyWithoutOurImports = parsedBody.filter((item, index) => !trueImportsToRemove.includes(parsedBody[index]));
+    // parsedBodyWithoutOurImports.unshift(...await addCode(targetedDiscordModApiLibrary.default));
     for (let index = 0; index < parsedBodyWithoutOurImports.length; index++) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const element = parsedBodyWithoutOurImports[index];
@@ -144,12 +145,43 @@ export default function (ast: ParseResult<File>, targetedDiscordModApiLibrary: {
                 const targetClass: IModImplementation[keyof IModImplementation] = propDesc.value ?? propDesc.get!(); // TODO: don't make value `any`
                 if (targetClass == undefined)
                     continue;
-                const replacementObject = getKeyValue(targetClass, (trueObj.property as Identifier).name as keyof typeof targetClass) as { object: string, property: string };
+                if (typeof targetClass === "object" && !((trueObj.property as Identifier).name as keyof typeof targetClass in targetClass)) {
+                    const originalObj = (trueObj.object as Identifier).name;
+                    const originalProp = (trueObj.property as Identifier).name;
+                    // (trueObj.object as Identifier).name = "globalThis.implementationStores_require"; // TODO: Remove hardcoded paths
+                    // (trueObj.property as Identifier).name = (trueObj.property as Identifier).name + ".func";
+                    for (const prop of Object.getOwnPropertyNames(trueObj)) {
+                        // @ts-expect-error well
+                        delete trueObj[prop];
+                    }
+                    // const newCallExpr = callExpression(memberExpression(identifier("globalThis"), identifier("implementationStores_require")), [stringLiteral(`globalThis.implementationStores["${originalObj}"]["${originalProp}"]`)]);
+                    const newCallExpr = callExpression(memberExpression(identifier(IMPLEMENTATION_STORES_PATH_SOURCE), identifier(IMPLEMENTATION_STORES_PATH_REQ)), [
+                        // stringLiteral(`globalThis.implementationStores["${originalObj}"]["${originalProp}"]`),
+                        memberExpression(memberExpression(memberExpression(identifier(IMPLEMENTATION_STORES_PATH_SOURCE), identifier(IMPLEMENTATION_STORES_PATH_VAR_NAME)), identifier(originalObj)), identifier(originalProp)),
+                    ]);
+                    Object.assign(trueObj, newCallExpr);
+                    continue;
+                }
+                const replacementObject = getKeyValue(targetClass, (trueObj.property as Identifier).name as keyof typeof targetClass) as { object: string, property: string, wrapperName?: string };
+                // const replacementObject = __requireInternal(targetedDiscordModApiLibrary.default, (trueObj.object as Identifier).name, (trueObj.property as Identifier).name)! as unknown as any;
+                if (replacementObject.wrapperName) {
+                    const originalObj = (trueObj.object as Identifier).name;
+                    for (const prop of Object.getOwnPropertyNames(trueObj)) {
+                        // @ts-expect-error well
+                        delete trueObj[prop];
+                    }
+                    const newCallExpr = callExpression(memberExpression(identifier(IMPLEMENTATION_STORES_PATH_SOURCE), identifier(IMPLEMENTATION_STORES_PATH_REQ)), [
+                        memberExpression(memberExpression(memberExpression(identifier(IMPLEMENTATION_STORES_PATH_SOURCE), identifier(IMPLEMENTATION_STORES_PATH_VAR_NAME)), identifier(originalObj)), identifier(replacementObject.wrapperName)),
+                    ]);
+                    Object.assign(trueObj, newCallExpr);
+                    continue;
+                }
                 (trueObj.object as Identifier).name = replacementObject.object;
                 (trueObj.property as Identifier).name = replacementObject.property;
             }
         }
     }
+    parsedBodyWithoutOurImports.unshift(...await addCode(targetedDiscordModApiLibrary.default));
     if ((targetedDiscordModApiLibrary as { default: IModImplementation } & { convertFormat: (ast_: Statement[]) => Statement[] }).convertFormat == undefined)
         return parsedBodyWithoutOurImports;
     return (targetedDiscordModApiLibrary as { default: IModImplementation } & { convertFormat: (ast_: Statement[]) => Statement[] }).convertFormat(parsedBodyWithoutOurImports);
