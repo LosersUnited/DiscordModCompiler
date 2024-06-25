@@ -1,6 +1,6 @@
 import { ClassDeclaration, ClassMethod, ExportDefaultDeclaration, Identifier, Statement } from "@babel/types";
 import { IModImplementation } from "../api/ModImplementation.js";
-import { createFunctionFromObjectProperty, createFunctionWithWrapperNeeded } from "../api/RuntimeGenerators.js";
+import { createFunctionWithWrapperNeeded } from "../api/RuntimeGenerators.js";
 import { IBaseWebpackApi } from "../api/Webpack.js";
 import { parse } from "@babel/parser";
 
