@@ -138,7 +138,8 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
             console.log(trueObj);
             if (trueObj != undefined && importAliasMap.find(x => x.codeName == (trueObj.object as Identifier).name) !== undefined) {
                 removeASTLocation(trueObj as unknown as Statement);
-                const propDesc = Object.getOwnPropertyDescriptor(targetedDiscordModApiLibrary.default, importAliasMap.find(x => x.codeName == (trueObj.object as Identifier).name)?.internalName as keyof IModImplementation);
+                const importedInternalName = importAliasMap.find(x => x.codeName == (trueObj.object as Identifier).name)!.internalName;
+                const propDesc = Object.getOwnPropertyDescriptor(targetedDiscordModApiLibrary.default, importedInternalName as keyof IModImplementation);
                 if (!propDesc)
                     continue;
                 // const targetClass = targetedDiscordModApiLibrary.default[(trueObj.object as Identifier).name];
@@ -146,7 +147,7 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
                 if (targetClass == undefined)
                     continue;
                 if (typeof targetClass === "object" && !((trueObj.property as Identifier).name as keyof typeof targetClass in targetClass)) {
-                    const originalObj = (trueObj.object as Identifier).name;
+                    const originalObj = importedInternalName;
                     const originalProp = (trueObj.property as Identifier).name;
                     // (trueObj.object as Identifier).name = "globalThis.implementationStores_require"; // TODO: Remove hardcoded paths
                     // (trueObj.property as Identifier).name = (trueObj.property as Identifier).name + ".func";
@@ -165,7 +166,7 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
                 const replacementObject = getKeyValue(targetClass, (trueObj.property as Identifier).name as keyof typeof targetClass) as { object: string, property: string, wrapperName?: string };
                 // const replacementObject = __requireInternal(targetedDiscordModApiLibrary.default, (trueObj.object as Identifier).name, (trueObj.property as Identifier).name)! as unknown as any;
                 if (replacementObject.wrapperName) {
-                    const originalObj = (trueObj.object as Identifier).name;
+                    const originalObj = importedInternalName;
                     for (const prop of Object.getOwnPropertyNames(trueObj)) {
                         // @ts-expect-error well
                         delete trueObj[prop];
