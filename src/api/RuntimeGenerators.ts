@@ -120,7 +120,7 @@ export async function addCode(mod: IModImplementation) {
         }
     }
     // const rawCode = "globalThis.implementationStores = {\n" + getMain(serializer).serialize(constructed) + "\n}";
-    const req = (target: any) => new Function("target", "return {" + target.func + "}.func;")(target);
+    const req = (target: any) => new Function("return {" + target.func + "}.func;")();
     const rawCode =
         `${IMPLEMENTATION_STORES_PATH_SOURCE}.${IMPLEMENTATION_STORES_PATH_VAR_NAME} = (${createJavaScriptFromObject(constructed, true)});
         ${IMPLEMENTATION_STORES_PATH_SOURCE}.${IMPLEMENTATION_STORES_PATH_REQ} = ${req.toString()};`;
