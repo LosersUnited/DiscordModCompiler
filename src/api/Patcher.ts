@@ -1,5 +1,5 @@
 export interface IBasePatcherApi {
-    internalId: string | undefined; /* NOT ON REPLUGGED */
+    internalId: string | undefined; /* NOT ON REPLUGGED, on BD it's the "caller" for Patcher functions */
     unpatchAll(): void;
     after<T, A = unknown[], R = unknown>(target: T, name: string, cb: (args: A, res: R, instance: T) => R): () => void;
 }
