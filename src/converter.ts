@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ParseResult } from "@babel/parser";
-import { File, Identifier, ImportDeclaration, ImportSpecifier, MemberExpression, NewExpression, Statement, callExpression, identifier, memberExpression, newExpression, stringLiteral } from "@babel/types";
+import { File, Identifier, ImportDeclaration, ImportSpecifier, MemberExpression, NewExpression, Standardized, Statement, callExpression, identifier, memberExpression, newExpression, stringLiteral } from "@babel/types";
 import { NonFunctionType, getKeyValue, myPackageName } from "./utils.js";
 import { IModImplementation } from "./api/ModImplementation";
 import { addCode } from "./api/RuntimeGenerators.js";
 import { IMPLEMENTATION_STORES_PATH_REQ, IMPLEMENTATION_STORES_PATH_SOURCE, IMPLEMENTATION_STORES_PATH_VAR_NAME } from "./constants.js";
 
-function removeASTLocation(ast: Statement[] | Statement) {
+function removeASTLocation(ast: Standardized[] | Standardized) {
     if (Array.isArray(ast)) {
         ast.forEach(a => removeASTLocation(a));
     }
@@ -134,7 +134,7 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
             const trueObj = deepFind<NewExpression>(element, newExpressionPath);
             console.log(trueObj);
             if (trueObj != undefined && importAliasMap.find(x => x.codeName == (trueObj.callee as Identifier).name) !== undefined) {
-                removeASTLocation(trueObj as unknown as Statement);
+                removeASTLocation(trueObj);
                 const importedInternalName = importAliasMap.find(x => x.codeName == (trueObj.callee as Identifier).name)!.internalName;
                 const propDesc = Object.getOwnPropertyDescriptor(targetedDiscordModApiLibrary.default, importedInternalName as keyof IModImplementation);
                 if (!propDesc)
@@ -177,7 +177,7 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
             const trueObj = deepFind<MemberExpression>(element, memberExpressionPath);
             console.log(trueObj);
             if (trueObj != undefined && importAliasMap.find(x => x.codeName == (trueObj.object as Identifier).name) !== undefined) {
-                removeASTLocation(trueObj as unknown as Statement);
+                removeASTLocation(trueObj);
                 const importedInternalName = importAliasMap.find(x => x.codeName == (trueObj.object as Identifier).name)!.internalName;
                 const propDesc = Object.getOwnPropertyDescriptor(targetedDiscordModApiLibrary.default, importedInternalName as keyof IModImplementation);
                 if (!propDesc)
