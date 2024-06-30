@@ -7,6 +7,7 @@ export interface IFunctionImplementation {
     data: any,
     func: (...args: any[]) => any,
     isWrapper?: boolean,
+    asImmediatelyInvokedFunctionExpression?: boolean;
 }
 class FunctionImplementation implements IFunctionImplementation {
     supplies: string;
@@ -14,6 +15,7 @@ class FunctionImplementation implements IFunctionImplementation {
     data: any;
     func: (...args: any[]) => any;
     isWrapper?: boolean | undefined;
+    asImmediatelyInvokedFunctionExpression?: boolean | undefined;
     // constructor(supplies: string, depends: string[], data: any, func: (...args: any[]) => any) {
     //     this.supplies = supplies;
     //     this.depends = depends;
@@ -21,13 +23,14 @@ class FunctionImplementation implements IFunctionImplementation {
     //     this.func = func;
     // }
     constructor(options: IFunctionImplementation) {
-        const { supplies, depends, data, func, isWrapper } = options;
+        const { supplies, depends, data, func, isWrapper, asImmediatelyInvokedFunctionExpression } = options;
         this.supplies = supplies!;
         this.depends = depends!;
         Object.defineProperty(this, "data", { value: data, enumerable: data !== null });
         this.func = func!;
         // this.isWrapper = isWrapper === true;
         Object.defineProperty(this, "isWrapper", { value: isWrapper, enumerable: isWrapper === true });
+        Object.defineProperty(this, "asImmediatelyInvokedFunctionExpression", { value: asImmediatelyInvokedFunctionExpression, enumerable: asImmediatelyInvokedFunctionExpression === true });
     }
 }
 export {
@@ -56,7 +59,11 @@ export async function initStores() {
 }
 export function doesImplement(mod: IModImplementation, category: string, method: string) {
     const categoryObj = getKeyValue(mod, category as keyof IModImplementation);
-    return getKeyValue(categoryObj, method as never) != undefined;
+    const value = getKeyValue(categoryObj, method as never);
+    if (value === undefined || (value as ({ missing: boolean })).missing === true) {
+        return false;
+    }
+    return true;
 }
 
 export function __requireInternal(mod: IModImplementation, category: string, method: string, ignoreWrappers: boolean = false) {

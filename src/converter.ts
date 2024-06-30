@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ParseResult } from "@babel/parser";
-import { File, Identifier, ImportDeclaration, ImportSpecifier, MemberExpression, Statement, callExpression, identifier, memberExpression, stringLiteral } from "@babel/types";
+import { File, Identifier, ImportDeclaration, ImportSpecifier, MemberExpression, NewExpression, Standardized, Statement, callExpression, identifier, memberExpression, newExpression, stringLiteral } from "@babel/types";
 import { NonFunctionType, getKeyValue, myPackageName } from "./utils.js";
 import { IModImplementation } from "./api/ModImplementation";
 import { addCode } from "./api/RuntimeGenerators.js";
 import { IMPLEMENTATION_STORES_PATH_REQ, IMPLEMENTATION_STORES_PATH_SOURCE, IMPLEMENTATION_STORES_PATH_VAR_NAME } from "./constants.js";
 
-function removeASTLocation(ast: Statement[] | Statement) {
+function removeASTLocation(ast: Standardized[] | Standardized) {
     if (Array.isArray(ast)) {
         ast.forEach(a => removeASTLocation(a));
     }
@@ -97,7 +97,7 @@ function deepFind<K>(obj: any, path: string): K | undefined {
 
 export default async function (ast: ParseResult<File>, targetedDiscordModApiLibrary: { default: IModImplementation }): Promise<Statement[]> {
     const parsedBody = ast.program.body;
-    const importStatements = parsedBody.filter(x => x.type == "ImportDeclaration") as Statement[];
+    const importStatements = parsedBody.filter(x => x.type == "ImportDeclaration") as ImportDeclaration[];
     const importAliasMap = [] as { internalName: string, codeName: string }[];
     removeASTLocation(importStatements);
     const importsToRemove: number[] = [];
@@ -106,7 +106,6 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
         // spec.local.name = "test_"; // alias
         // // @ts-ignore
         // spec.imported.name = "test"; // imported value
-        // debugger;
         if (element.source.value == myPackageName) { // checking if it's the same module as we are
             for (let index2 = 0; index2 < element.specifiers.length; index2++) {
                 const spec = element.specifiers[index2] as ImportSpecifier;
@@ -120,7 +119,7 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
     }
     const trueImportsToRemove =
         importStatements.filter((_, index) => importsToRemove.includes(index));
-    const parsedBodyWithoutOurImports = parsedBody.filter((item, index) => !trueImportsToRemove.includes(parsedBody[index]));
+    const parsedBodyWithoutOurImports = parsedBody.filter((_, index) => !trueImportsToRemove.includes(parsedBody[index] as ImportDeclaration));
     // parsedBodyWithoutOurImports.unshift(...await addCode(targetedDiscordModApiLibrary.default));
     for (let index = 0; index < parsedBodyWithoutOurImports.length; index++) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -129,15 +128,56 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
          * Example:
          * WebpackApi.getModule(something) -> "WebpackApi" matches signature of an element from importsToBake array -> import WebpackApi ourselves -> find method getModule -> select replacement based on target client mod -> read target's object path and property name -> replace them
          */
-        debugger;
         // console.log(findAllTypesWithPath(element, "MemberExpression"));
-        const paths = findPathsToType({ obj: element, targetType: "MemberExpression" });
-        for (let index2 = 0; index2 < paths.length; index2++) {
-            const element2 = paths[index2];
-            const trueObj = deepFind<MemberExpression>(element, element2);
+        const newExpressionPaths = findPathsToType({ obj: element, targetType: "NewExpression" });
+        for (const newExpressionPath of newExpressionPaths) {
+            const trueObj = deepFind<NewExpression>(element, newExpressionPath);
+            console.log(trueObj);
+            if (trueObj != undefined && importAliasMap.find(x => x.codeName == (trueObj.callee as Identifier).name) !== undefined) {
+                removeASTLocation(trueObj);
+                const importedInternalName = importAliasMap.find(x => x.codeName == (trueObj.callee as Identifier).name)!.internalName;
+                const propDesc = Object.getOwnPropertyDescriptor(targetedDiscordModApiLibrary.default, importedInternalName as keyof IModImplementation);
+                if (!propDesc)
+                    continue;
+                const result: IModImplementation[keyof IModImplementation] = propDesc.value ?? propDesc.get!();
+                if (result == undefined || typeof result === "boolean")
+                    continue;
+                const { constructor } = result;
+                // @ts-expect-error This for sure is a constructor
+                const constructed = new constructor();
+                if (constructed.constructor_?.wrapperName) {
+                    const originalObj = importedInternalName;
+                    for (const prop of Object.getOwnPropertyNames(trueObj)) {
+                        // @ts-expect-error well
+                        delete trueObj[prop];
+                    }
+                    const newCallExpr = callExpression(memberExpression(identifier(IMPLEMENTATION_STORES_PATH_SOURCE), identifier(IMPLEMENTATION_STORES_PATH_REQ)), [
+                        memberExpression(memberExpression(memberExpression(identifier(IMPLEMENTATION_STORES_PATH_SOURCE), identifier(IMPLEMENTATION_STORES_PATH_VAR_NAME)), identifier(originalObj)), identifier(constructed.constructor_.wrapperName)),
+                    ]);
+                    Object.assign(trueObj, newCallExpr);
+                    continue;
+                }
+                const newAst = newExpression(
+                    memberExpression(
+                        identifier(constructed.object),
+                        identifier(constructed.property),
+                    ),
+                    [],
+                );
+                for (const prop of Object.getOwnPropertyNames(trueObj)) {
+                    // @ts-expect-error well
+                    delete trueObj[prop];
+                }
+                Object.assign(trueObj, newAst);
+                continue;
+            }
+        }
+        const memberExpressionPaths = findPathsToType({ obj: element, targetType: "MemberExpression" });
+        for (const memberExpressionPath of memberExpressionPaths) {
+            const trueObj = deepFind<MemberExpression>(element, memberExpressionPath);
             console.log(trueObj);
             if (trueObj != undefined && importAliasMap.find(x => x.codeName == (trueObj.object as Identifier).name) !== undefined) {
-                removeASTLocation(trueObj as unknown as Statement);
+                removeASTLocation(trueObj);
                 const importedInternalName = importAliasMap.find(x => x.codeName == (trueObj.object as Identifier).name)!.internalName;
                 const propDesc = Object.getOwnPropertyDescriptor(targetedDiscordModApiLibrary.default, importedInternalName as keyof IModImplementation);
                 if (!propDesc)
