@@ -132,9 +132,8 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
         debugger;
         // console.log(findAllTypesWithPath(element, "MemberExpression"));
         const newExpressionPaths = findPathsToType({ obj: element, targetType: "NewExpression" });
-        for (let index2 = 0; index2 < newExpressionPaths.length; index2++) {
-            const element2 = newExpressionPaths[index2];
-            const trueObj = deepFind<NewExpression>(element, element2);
+        for (const newExpressionPath of newExpressionPaths) {
+            const trueObj = deepFind<NewExpression>(element, newExpressionPath);
             console.log(trueObj);
             if (trueObj != undefined && importAliasMap.find(x => x.codeName == (trueObj.callee as Identifier).name) !== undefined) {
                 removeASTLocation(trueObj as unknown as Statement);
@@ -177,9 +176,8 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
             }
         }
         const memberExpressionPaths = findPathsToType({ obj: element, targetType: "MemberExpression" });
-        for (let index2 = 0; index2 < memberExpressionPaths.length; index2++) {
-            const element2 = memberExpressionPaths[index2];
-            const trueObj = deepFind<MemberExpression>(element, element2);
+        for (const memberExpressionPath of memberExpressionPaths) {
+            const trueObj = deepFind<MemberExpression>(element, memberExpressionPath);
             console.log(trueObj);
             if (trueObj != undefined && importAliasMap.find(x => x.codeName == (trueObj.object as Identifier).name) !== undefined) {
                 removeASTLocation(trueObj as unknown as Statement);
