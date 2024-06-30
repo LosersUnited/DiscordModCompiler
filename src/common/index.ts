@@ -45,7 +45,7 @@ export const implementationStores = {
     // "Webpack": WebpackImplementations,
 } as { [category: string]: { implementationStore: { [key: string]: FunctionImplementation }, targetMod: IModImplementation } };
 export async function initStores() {
-    const stores = readdirSync(`${__dirname}`).filter(x => !x.startsWith("index."));
+    const stores = readdirSync(`${__dirname}`).filter(x => !x.startsWith("index.") && !x.endsWith(".d.ts"));
     console.log(stores);
     for (let index = 0; index < stores.length; index++) {
         const filler = import(url.pathToFileURL(`${__dirname}/${stores[index]}`).href);
