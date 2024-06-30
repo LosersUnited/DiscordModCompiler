@@ -97,7 +97,7 @@ function deepFind<K>(obj: any, path: string): K | undefined {
 
 export default async function (ast: ParseResult<File>, targetedDiscordModApiLibrary: { default: IModImplementation }): Promise<Statement[]> {
     const parsedBody = ast.program.body;
-    const importStatements = parsedBody.filter(x => x.type == "ImportDeclaration") as Statement[];
+    const importStatements = parsedBody.filter(x => x.type == "ImportDeclaration") as Standardized[];
     const importAliasMap = [] as { internalName: string, codeName: string }[];
     removeASTLocation(importStatements);
     const importsToRemove: number[] = [];
@@ -119,7 +119,7 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
     }
     const trueImportsToRemove =
         importStatements.filter((_, index) => importsToRemove.includes(index));
-    const parsedBodyWithoutOurImports = parsedBody.filter((item, index) => !trueImportsToRemove.includes(parsedBody[index]));
+    const parsedBodyWithoutOurImports = parsedBody.filter((item, index) => !trueImportsToRemove.includes(parsedBody[index] as Standardized));
     // parsedBodyWithoutOurImports.unshift(...await addCode(targetedDiscordModApiLibrary.default));
     for (let index = 0; index < parsedBodyWithoutOurImports.length; index++) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
