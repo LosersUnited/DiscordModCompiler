@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ParseResult } from "@babel/parser";
-import { File, Identifier, ImportDeclaration, ImportSpecifier, MemberExpression, Statement, callExpression, identifier, memberExpression, stringLiteral } from "@babel/types";
+import { File, Identifier, ImportDeclaration, ImportSpecifier, MemberExpression, NewExpression, Statement, callExpression, identifier, memberExpression, newExpression, stringLiteral } from "@babel/types";
 import { NonFunctionType, getKeyValue, myPackageName } from "./utils.js";
 import { IModImplementation } from "./api/ModImplementation";
 import { addCode } from "./api/RuntimeGenerators.js";
@@ -131,9 +131,54 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
          */
         debugger;
         // console.log(findAllTypesWithPath(element, "MemberExpression"));
-        const paths = findPathsToType({ obj: element, targetType: "MemberExpression" });
-        for (let index2 = 0; index2 < paths.length; index2++) {
-            const element2 = paths[index2];
+        const newExpressionPaths = findPathsToType({ obj: element, targetType: "NewExpression" });
+        for (let index2 = 0; index2 < newExpressionPaths.length; index2++) {
+            const element2 = newExpressionPaths[index2];
+            const trueObj = deepFind<NewExpression>(element, element2);
+            console.log(trueObj);
+            if (trueObj != undefined && importAliasMap.find(x => x.codeName == (trueObj.callee as Identifier).name) !== undefined) {
+                removeASTLocation(trueObj as unknown as Statement);
+                const importedInternalName = importAliasMap.find(x => x.codeName == (trueObj.callee as Identifier).name)!.internalName;
+                const propDesc = Object.getOwnPropertyDescriptor(targetedDiscordModApiLibrary.default, importedInternalName as keyof IModImplementation);
+                if (!propDesc)
+                    continue;
+                debugger;
+                const result: IModImplementation[keyof IModImplementation] = propDesc.value ?? propDesc.get!();
+                if (result == undefined || typeof result === "boolean")
+                    continue;
+                const { constructor } = result;
+                // @ts-expect-error This for sure is a constructor
+                const constructed = new constructor();
+                if (constructed.constructor_?.wrapperName) {
+                    const originalObj = importedInternalName;
+                    for (const prop of Object.getOwnPropertyNames(trueObj)) {
+                        // @ts-expect-error well
+                        delete trueObj[prop];
+                    }
+                    const newCallExpr = callExpression(memberExpression(identifier(IMPLEMENTATION_STORES_PATH_SOURCE), identifier(IMPLEMENTATION_STORES_PATH_REQ)), [
+                        memberExpression(memberExpression(memberExpression(identifier(IMPLEMENTATION_STORES_PATH_SOURCE), identifier(IMPLEMENTATION_STORES_PATH_VAR_NAME)), identifier(originalObj)), identifier(constructed.constructor_.wrapperName)),
+                    ]);
+                    Object.assign(trueObj, newCallExpr);
+                    continue;
+                }
+                const newAst = newExpression(
+                    memberExpression(
+                        identifier(constructed.object),
+                        identifier(constructed.property),
+                    ),
+                    [],
+                );
+                for (const prop of Object.getOwnPropertyNames(trueObj)) {
+                    // @ts-expect-error well
+                    delete trueObj[prop];
+                }
+                Object.assign(trueObj, newAst);
+                continue;
+            }
+        }
+        const memberExpressionPaths = findPathsToType({ obj: element, targetType: "MemberExpression" });
+        for (let index2 = 0; index2 < memberExpressionPaths.length; index2++) {
+            const element2 = memberExpressionPaths[index2];
             const trueObj = deepFind<MemberExpression>(element, element2);
             console.log(trueObj);
             if (trueObj != undefined && importAliasMap.find(x => x.codeName == (trueObj.object as Identifier).name) !== undefined) {
