@@ -49,7 +49,6 @@ const implementationStore = {
         supplies: "getByStrings",
         data: null,
         func(...strings) {
-            /* __requireInternal(targetMod, "WebpackApi", "test")!(); */
             const getModule = __requireInternal(targetMod, "WebpackApi", "getModule");
             if (!getModule)
                 throw new Error("Unimplemented");
@@ -64,16 +63,6 @@ const implementationStore = {
                 }
                 return true;
             });
-        },
-    }),
-    test: new FunctionImplementation({
-        data: null,
-        depends: ["getByStrings"],
-        supplies: "test",
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        func(...args: any[]) {
-            debugger;
-            return "the test worked";
         },
     }),
 } as { [key: string]: FunctionImplementation };

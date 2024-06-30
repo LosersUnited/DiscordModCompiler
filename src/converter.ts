@@ -106,7 +106,6 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
         // spec.local.name = "test_"; // alias
         // // @ts-ignore
         // spec.imported.name = "test"; // imported value
-        // debugger;
         if (element.source.value == myPackageName) { // checking if it's the same module as we are
             for (let index2 = 0; index2 < element.specifiers.length; index2++) {
                 const spec = element.specifiers[index2] as ImportSpecifier;
@@ -129,7 +128,6 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
          * Example:
          * WebpackApi.getModule(something) -> "WebpackApi" matches signature of an element from importsToBake array -> import WebpackApi ourselves -> find method getModule -> select replacement based on target client mod -> read target's object path and property name -> replace them
          */
-        debugger;
         // console.log(findAllTypesWithPath(element, "MemberExpression"));
         const newExpressionPaths = findPathsToType({ obj: element, targetType: "NewExpression" });
         for (const newExpressionPath of newExpressionPaths) {
@@ -141,7 +139,6 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
                 const propDesc = Object.getOwnPropertyDescriptor(targetedDiscordModApiLibrary.default, importedInternalName as keyof IModImplementation);
                 if (!propDesc)
                     continue;
-                debugger;
                 const result: IModImplementation[keyof IModImplementation] = propDesc.value ?? propDesc.get!();
                 if (result == undefined || typeof result === "boolean")
                     continue;

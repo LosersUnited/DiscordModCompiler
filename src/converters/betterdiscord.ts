@@ -19,9 +19,6 @@ class BDPatcherApi implements IBasePatcherApi {
         return createFunctionWithWrapperNeeded("BdApi.Patcher", "unpatchAll", "unpatchAllWrapper");
     }
     get after() {
-        // return createFunctionWithWrapperNeeded("undefined", "undefined", "after");
-        // return createFunctionWithWrapperNeeded("undefined", "undefined", "after");
-        // return createFunctionThatIsMissing();
         return createFunctionWithWrapperNeeded("BdApi.Patcher", "after", "afterWrapper");
     }
 }
