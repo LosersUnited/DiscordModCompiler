@@ -21,6 +21,9 @@ class BDPatcherApi implements IBasePatcherApi {
     get after() {
         return createFunctionWithWrapperNeeded("BdApi.Patcher", "after", "afterWrapper");
     }
+    get before() {
+        return createFunctionWithWrapperNeeded("BdApi.Patcher", "before", "beforeWrapper");
+    }
 }
 
 export function convertFormat(ast: Statement[]) {

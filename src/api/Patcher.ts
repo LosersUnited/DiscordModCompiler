@@ -13,6 +13,10 @@ class DummyPatcherApi implements IBasePatcherApi {
     after<T, A = unknown[], R = unknown>(target: T, name: string, cb: (args: A, res: R, instance: T) => R): () => void {
         throw new Error("Method not implemented. This is a dummy class.");
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    before<T, A = unknown[]>(target: T, name: string, cb: (args: A, instance: T) => A): () => void {
+        throw new Error("Method not implemented. This is a dummy class.");
+    }
 }
 
 export const PatcherApi = DummyPatcherApi;
