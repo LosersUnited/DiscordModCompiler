@@ -28,6 +28,9 @@ class RPPatcherApi implements IBasePatcherApi {
     get before() {
         return createFunctionFromObjectProperty("replugged.Injector.constructor", "beforeWrapper");
     }
+    get instead() {
+        return createFunctionFromObjectProperty("replugged.Injector.constructor", "insteadWrapper");
+    }
 }
 
 export function convertFormat(ast: Statement[]) {
