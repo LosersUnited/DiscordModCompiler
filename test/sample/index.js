@@ -1,4 +1,4 @@
-import { WebpackApi } from "discord-mod-compiler";
+import { WebpackApi, PatcherApi } from "discord-mod-compiler";
 
 export default class CrossCompiledSample {
     start() {
@@ -23,6 +23,8 @@ export default class CrossCompiledSample {
         } else {
             console.log("WebpackApi.getModule is working");
         }
+        const test = new PatcherApi();
+        test.before(someModuleType3, "sendMessage", console.log);
     }
     stop() {
     }
