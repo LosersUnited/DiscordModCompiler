@@ -9,7 +9,11 @@ import { transformSync } from "@babel/core";
 import { IModImplementation } from "./api/ModImplementation.js";
 // import { addCode } from "./api/RuntimeGenerators.js";
 
-if (process.argv.length != 5) {
+if (process.argv[5] != undefined && process.argv[5] !== "--entrypoint") {
+    console.error(`Usage:\n\t${myPackageName} <input file> <target client mod> <output file> --entrypoint\nExample:\n\t${myPackageName} ./index.js BetterDiscord ./dist/index.js --entrypoint`);
+    process.exit(1);
+}
+if (process.argv.length < 5) { // TODO: make a proper option parser
     console.error(`Usage:\n\t${myPackageName} <input file> <target client mod> <output file>\nExample:\n\t${myPackageName} ./index.js BetterDiscord ./dist/index.js`);
     process.exit(1);
 }
@@ -48,7 +52,7 @@ const filler = import(url.pathToFileURL(`${__dirname}/converters/${targetDiscord
 filler.then(async (x: { default: IModImplementation }) => {
     if (x.default.importsForbidden)
         console.warn('\x1b[33m%s\x1b[0m', `Warning: Target mod ${targetDiscordMod} requires your code to be bundled into single file`);
-    const out = await converter(ast as File & { errors: [] }, x);
+    const out = await converter(ast as File & { errors: [] }, x, process.argv[5] !== undefined ? process.argv[5] === "--entrypoint" : true);
     const outMod = {
         ...ast,
         program: {

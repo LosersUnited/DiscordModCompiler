@@ -95,7 +95,7 @@ function deepFind<K>(obj: any, path: string): K | undefined {
     return current;
 }
 
-export default async function (ast: ParseResult<File>, targetedDiscordModApiLibrary: { default: IModImplementation }): Promise<Statement[]> {
+export default async function (ast: ParseResult<File>, targetedDiscordModApiLibrary: { default: IModImplementation }, shouldConvertFormat: boolean = true): Promise<Statement[]> {
     const parsedBody = ast.program.body;
     const importStatements = parsedBody.filter(x => x.type == "ImportDeclaration") as Statement[];
     const importAliasMap = [] as { internalName: string, codeName: string }[];
@@ -183,7 +183,7 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
         }
     }
     parsedBodyWithoutOurImports.unshift(...await addCode(targetedDiscordModApiLibrary.default));
-    if ((targetedDiscordModApiLibrary as { default: IModImplementation } & { convertFormat: (ast_: Statement[]) => Statement[] }).convertFormat == undefined)
+    if (shouldConvertFormat == false || (targetedDiscordModApiLibrary as { default: IModImplementation } & { convertFormat: (ast_: Statement[]) => Statement[] }).convertFormat == undefined)
         return parsedBodyWithoutOurImports;
     return (targetedDiscordModApiLibrary as { default: IModImplementation } & { convertFormat: (ast_: Statement[]) => Statement[] }).convertFormat(parsedBodyWithoutOurImports);
 }
