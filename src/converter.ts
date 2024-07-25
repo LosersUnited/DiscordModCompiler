@@ -225,5 +225,5 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
     parsedBodyWithoutOurImports.unshift(...await addCode(targetedDiscordModApiLibrary.default));
     if ((targetedDiscordModApiLibrary as { default: IModImplementation } & { convertFormat: (ast_: Statement[]) => Statement[] }).convertFormat == undefined)
         return parsedBodyWithoutOurImports;
-    return (targetedDiscordModApiLibrary as { default: IModImplementation } & { convertFormat: (ast_: Statement[]) => Statement[] }).convertFormat(parsedBodyWithoutOurImports);
+    return await (targetedDiscordModApiLibrary as { default: IModImplementation } & { convertFormat: (ast_: Statement[]) => Statement[] }).convertFormat(parsedBodyWithoutOurImports);
 }
