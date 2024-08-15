@@ -1,12 +1,35 @@
 import { ClassDeclaration, ClassMethod, ExportDefaultDeclaration, Identifier, Statement } from "@babel/types";
 import { IModImplementation } from "../api/ModImplementation.js";
-import { createFunctionWithWrapperNeeded } from "../api/RuntimeGenerators.js";
+import { createFunctionFromObjectProperty, createFunctionWithWrapperNeeded } from "../api/RuntimeGenerators.js";
 import { IBaseWebpackApi } from "../api/Webpack.js";
 import { parse } from "@babel/parser";
+import { IBasePatcherApi } from "../api/Patcher.js";
 
 class RPWebpackApi implements IBaseWebpackApi {
     get getModule() {
         return createFunctionWithWrapperNeeded("replugged.webpack", "getModule", "getModuleRawToExportedWrapper");
+    }
+}
+
+class RPPatcherApi implements IBasePatcherApi {
+    get constructor_() {
+        return createFunctionFromObjectProperty("replugged", "Injector") as any;
+    }
+    constructor() {
+        return this.constructor_;
+    }
+    internalId: undefined;
+    get unpatchAll() {
+        return createFunctionFromObjectProperty("replugged.Injector.constructor", "unpatchAllWrapper");
+    }
+    get after() {
+        return createFunctionFromObjectProperty("replugged.Injector.constructor", "afterWrapper");
+    }
+    get before() {
+        return createFunctionFromObjectProperty("replugged.Injector.constructor", "beforeWrapper");
+    }
+    get instead() {
+        return createFunctionFromObjectProperty("replugged.Injector.constructor", "insteadWrapper");
     }
 }
 
@@ -42,4 +65,5 @@ export function convertFormat(ast: Statement[]) {
 
 export default {
     WebpackApi: new RPWebpackApi(),
+    PatcherApi: RPPatcherApi.prototype,
 } as IModImplementation;

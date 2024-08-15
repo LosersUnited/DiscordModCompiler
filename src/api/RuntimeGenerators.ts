@@ -32,6 +32,13 @@ export function createFunctionWithWrapperNeeded(objectName: string, property: st
     Object.defineProperty(result, "wrapperName", { value: wrapperName });
     return result;
 }
+export function createFunctionThatIsMissing() {
+    const result = new Function(`return () => {throw new Error("Missing");}`)();
+    Object.defineProperty(result, "missing", {
+        value: true,
+    });
+    return result;
+}
 
 import { FunctionImplementation, __requireInternal, doesImplement, implementationStores, initStores } from "../common/index.js";
 import { createJavaScriptFromObject, getKeyValue } from "../utils.js";
@@ -120,7 +127,7 @@ export async function addCode(mod: IModImplementation) {
         }
     }
     // const rawCode = "globalThis.implementationStores = {\n" + getMain(serializer).serialize(constructed) + "\n}";
-    const req = (target: any) => new Function("return {" + target.func + "}.func;")();
+    const req = (target: any) => new Function("return {" + target.func + "}.func" + (target.asImmediatelyInvokedFunctionExpression === "true" ? "();" : ";"))();
     const rawCode =
         `${IMPLEMENTATION_STORES_PATH_SOURCE}.${IMPLEMENTATION_STORES_PATH_VAR_NAME} = (${createJavaScriptFromObject(constructed, true)});
         ${IMPLEMENTATION_STORES_PATH_SOURCE}.${IMPLEMENTATION_STORES_PATH_REQ} = ${req.toString()};`;
