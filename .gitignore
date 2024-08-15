@@ -5,3 +5,4 @@ dist
 src/converter copy.ts
 test/sample/betterdiscord/index.js
 test/sample/replugged/index.js
+test/sample/vencord/index.js
