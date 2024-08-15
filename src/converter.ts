@@ -169,7 +169,6 @@ export default async function (ast: ParseResult<File>, targetedDiscordModApiLibr
                     delete trueObj[prop];
                 }
                 Object.assign(trueObj, newAst);
-                continue;
             }
         }
         const memberExpressionPaths = findPathsToType({ obj: element, targetType: "MemberExpression" });
